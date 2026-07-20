@@ -1,12 +1,30 @@
+# yaml-language-server: $schema=https://render.com/schema/render.yaml.json
+
 services:
   - type: web
     name: firstmile-sidecar
     runtime: node
     plan: starter
+    # Collector state lives in-process, so keep a single instance: multiple
+    # instances would each hold a partial, inconsistent view of the funnel.
+    numInstances: 1
     buildCommand: npm ci && npm run build
     startCommand: node packages/kit/dist/sidecar.js
     healthCheckPath: /healthz
     autoDeployTrigger: off
+    # Only rebuild when code or dependencies change; docs and tests do not ship.
+    buildFilter:
+      paths:
+        - packages/**
+        - scripts/**
+        - package.json
+        - package-lock.json
+      ignoredPaths:
+        - "**/*.md"
+        - "**/test/**"
+        - "**/*.test.*"
+        - .github/**
+        - examples/**
     envVars:
       - key: NODE_VERSION
         value: "20"
@@ -20,6 +38,15 @@ services:
         sync: false
       - key: ALLOWED_ORIGINS
         sync: false
+      # Uncommenting the disk below and this PERSIST_PATH makes telemetry survive
+      # restarts; it also pins the service to one instance with stop-then-start
+      # deploys (a mounted disk cannot be shared or rolled).
+      # - key: PERSIST_PATH
+      #   value: /var/data/firstmile.jsonl
+    # disk:
+    #   name: firstmile-data
+    #   mountPath: /var/data
+    #   sizeGB: 1
 
 previews:
   generation: off
