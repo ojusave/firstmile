@@ -17,9 +17,9 @@ describe("scaffold", () => {
     expect(packageJson.scripts.test).toBe("vitest run");
     expect(packageJson.scripts.lint).toBe("eslint .");
     expect(readFileSync(new URL(".nvmrc", root), "utf8")).toBe("20\n");
-    // The workshop scaffold (fakesaaspi and the workshop firstmile) additionally
-    // pins the kit build + verify harness. The upstream firstmile product may
-    // carry its own root, so only assert these when the harness is present.
+    // The workshop scaffold additionally pins the kit build + verify harness.
+    // An upstream product root may carry its own toolchain, so only assert
+    // these when the workshop harness (scripts.verify) is present.
     if (typeof packageJson.scripts.verify === "string") {
       expect(packageJson.scripts.build).toBe(
         "npm run build --workspaces --if-present",
