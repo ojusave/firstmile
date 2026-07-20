@@ -1,0 +1,28 @@
+{
+  "name": "@firstmile/browser",
+  "version": "0.1.0",
+  "description": "Firstmile browser SDK. Install it, point it at your collector, and it auto-detects fields, pages, and flows without ever reading their contents.",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "unpkg": "./dist/firstmile.global.js",
+  "jsdelivr": "./dist/firstmile.global.js",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && node build.mjs",
+    "typecheck": "tsc --noEmit -p tsconfig.build.json"
+  },
+  "dependencies": {
+    "@firstmile/contract": "0.1.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

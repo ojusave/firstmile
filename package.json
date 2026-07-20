@@ -1,20 +1,19 @@
 {
-  "name": "firstmile",
+  "name": "firstmile-workspace",
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "firstmile monorepo: position-only onboarding instrumentation SDK",
+  "description": "Open-source, self-hostable onboarding and funnel diagnostics. Autocapture without the PII.",
   "workspaces": [
-    "packages/*",
-    "apps/*"
+    "packages/contract",
+    "packages/browser",
+    "packages/collector"
   ],
   "scripts": {
-    "build": "npm run build --workspaces --if-present",
+    "build": "npm run build -w @firstmile/contract && npm run build -w @firstmile/browser && npm run build -w @firstmile/collector",
     "test": "vitest run",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit -p packages/kit",
-    "smoke:package": "node scripts/smoke-package.mjs",
-    "verify": "node scripts/verify.mjs"
+    "typecheck": "npm run typecheck --workspaces --if-present"
   },
   "devDependencies": {
     "@eslint/js": "^9.28.0",
