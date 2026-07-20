@@ -137,6 +137,12 @@ docs/contract.md    The event contract, documented as the public surface.
 
 Modules depend only on `@firstmile/contract`, never on each other's internals. Storage and destinations sit behind ports so a new backend is one file behind an existing interface.
 
+## Workshop kit (packages/kit)
+
+Alongside the autocapture packages, this repo carries `packages/kit`: the vendored Firstmile workshop kit (tracker, in-memory collector, and sidecar) used by the DevRelCon demo. This repo owns it. Downstream repos (the fakesaaspi demo) vendor `packages/kit` via their own `scripts/sync-kit.sh` and must not hand-edit their copy; make kit changes here and land them on `main`.
+
+The sidecar exposes `POST /admin/reset` (admin-token gated), which clears its in-memory sessions and events. Sidecar deployments lose that state on every deploy or restart anyway, so reset gives operators an explicit, immediate way to start clean.
+
 ## Development
 
 ```bash
