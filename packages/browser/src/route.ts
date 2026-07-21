@@ -1,4 +1,4 @@
-import { IDENTIFIER_MAX_LENGTH } from "@firstmile/contract/meta";
+import { IDENTIFIER_MAX_LENGTH } from "@usecalibrate/contract/meta";
 
 const DYNAMIC_SEGMENT = /^(?:\d+|[0-9a-f]{8,}|[0-9a-f-]{16,})$/i;
 

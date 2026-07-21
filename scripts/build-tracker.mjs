@@ -22,7 +22,7 @@ await Promise.all([
   build({
     ...shared,
     format: "iife",
-    globalName: "firstmile",
+    globalName: "calibrate",
     outfile: join(dist, "tracker.min.js"),
   }),
   build({

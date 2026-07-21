@@ -1,4 +1,4 @@
-import { PRODUCT_NAME } from "@firstmile/contract";
+import { PRODUCT_NAME } from "@usecalibrate/contract";
 import { median, ratio } from "./median.js";
 import {
   derivePresence,

@@ -1,5 +1,5 @@
 /** Options for starting the browser client. Every field has a safe default. */
-export interface FirstmileOptions {
+export interface CalibrateOptions {
   /** Identifier naming the instrumented surface. Defaults to "default". */
   app?: string;
   /** Collector base URL. Defaults to the same-origin collector path. */
@@ -10,8 +10,8 @@ export interface FirstmileOptions {
   debug?: boolean;
 }
 
-/** The controller returned by firstmile(). Manual methods work with or without autocapture. */
-export interface FirstmileController {
+/** The controller returned by calibrate(). Manual methods work with or without autocapture. */
+export interface CalibrateController {
   readonly ready: Promise<void>;
   /** Records a position in the flow by route id. */
   page(route: string, nav?: "forward" | "back", from?: string): void;

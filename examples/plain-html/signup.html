@@ -22,7 +22,7 @@
     <main>
       <section id="email">
         <h1>Create an account</h1>
-        <small>This toy page never sends your input to firstmile.</small>
+        <small>This toy page never sends your input to calibrate.</small>
         <form id="email-form">
           <label for="email-input">Email</label>
           <input id="email-input" type="email" required autocomplete="email">
@@ -44,7 +44,7 @@
     </main>
     <script src="../../packages/kit/dist/tracker.min.js"></script>
     <script>
-      // firstmile integration starts
+      // calibrate integration starts
       const manifest = {
         version: "plain-html-v1",
         groups: ["signup", "select", "finish"],
@@ -54,12 +54,12 @@
           { id: "done", group: "finish" }
         ]
       };
-      firstmile.init({
+      calibrate.init({
         endpoint: "http://localhost:8787",
         writeKey: "example-write-key",
         manifest,
         app: "plain-html"
-      }).then(() => firstmile.view("email"));
+      }).then(() => calibrate.view("email"));
       const show = id => {
         document.querySelectorAll("main section").forEach(section => {
           section.hidden = section.id !== id;
@@ -67,19 +67,19 @@
       };
       document.querySelector("#email-form").addEventListener("submit", event => {
         event.preventDefault();
-        firstmile.complete("email");
-        firstmile.view("plan");
+        calibrate.complete("email");
+        calibrate.view("plan");
         show("plan");
       });
       document.querySelector("#plan-form").addEventListener("submit", event => {
         event.preventDefault();
-        firstmile.complete("plan");
-        firstmile.view("done");
-        firstmile.complete("done");
-        firstmile.shipped();
+        calibrate.complete("plan");
+        calibrate.view("done");
+        calibrate.complete("done");
+        calibrate.shipped();
         show("done");
       });
-      // firstmile integration ends
+      // calibrate integration ends
     </script>
   </body>
 </html>

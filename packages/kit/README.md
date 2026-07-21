@@ -1,44 +1,44 @@
-# @firstmile/sdk
+# usecalibrate
 
-`@firstmile/sdk` is an ESM-only browser and Node package for recording named onboarding positions and lifecycle signals. The browser API sends events to an existing embedded collector or standalone sidecar. It cannot start a shared backend.
+`usecalibrate` is an ESM-only browser and Node package for recording named onboarding positions and lifecycle signals. The browser API sends events to an existing embedded collector or standalone sidecar. It cannot start a shared backend.
 
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https%3A%2F%2Fgithub.com%2Fojusave%2Ffirstmile)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https%3A%2F%2Fgithub.com%2Fojusave%2Fusecalibrate)
 [Sign up on Render](https://dashboard.render.com/register?utm_source=github&utm_medium=referral&utm_campaign=ojus_demos&utm_content=hero_cta) |
-[GitHub repository](https://github.com/ojusave/firstmile)
+[GitHub repository](https://github.com/ojusave/usecalibrate)
 
 ## Installation
 
 This package has not been published to npm. In the repository checkout, build and pack it:
 
 ```sh
-cd /Users/ojusave/Desktop/Samples/firstmile
+cd /Users/ojusave/Desktop/Samples/usecalibrate
 npm ci
-npm run build --workspace @firstmile/sdk
-npm pack --workspace @firstmile/sdk
+npm run build --workspace usecalibrate
+npm pack --workspace usecalibrate
 ```
 
 Install the resulting tarball in another project:
 
 ```sh
-npm install /Users/ojusave/Desktop/Samples/firstmile/firstmile-sdk-0.1.0.tgz
+npm install /Users/ojusave/Desktop/Samples/usecalibrate/usecalibrate-0.1.0.tgz
 ```
 
 After publication, the intended command will be:
 
 ```sh
-npm install @firstmile/sdk
+npm install usecalibrate
 ```
 
 Browser use needs an ESM-aware bundler or runtime. The server and sidecar require Node.js 20 or newer.
 
 ## Browser quickstart
 
-The root export is browser-safe. It defaults to the collector endpoint `/__firstmile`:
+The root export is browser-safe. It defaults to the collector endpoint `/__calibrate`:
 
 ```ts
-import { firstmile } from "@firstmile/sdk";
+import { calibrate } from "usecalibrate";
 
-const fm = firstmile({
+const fm = calibrate({
   writeKey: "replace-with-browser-write-key",
   manifest: {
     version: "onboarding-v1",
@@ -67,8 +67,8 @@ await fm.ready;
 The collector must already exist. For a separate sidecar, set `endpoint` to its origin:
 
 ```ts
-const fm = firstmile({
-  endpoint: "https://firstmile-sidecar.example",
+const fm = calibrate({
+  endpoint: "https://calibrate-sidecar.example",
   writeKey: "replace-with-browser-write-key",
   manifest,
   routes
@@ -81,11 +81,11 @@ Mount the server routes at the default browser endpoint:
 
 ```ts
 import { Hono } from "hono";
-import { createFirstmile } from "@firstmile/sdk/server";
+import { createCalibrate } from "usecalibrate/server";
 
 const app = new Hono();
 
-const fm = createFirstmile({
+const fm = createCalibrate({
   manifest,
   adminToken: process.env.ADMIN_TOKEN,
   dashboardToken: process.env.DASHBOARD_TOKEN,
@@ -93,21 +93,21 @@ const fm = createFirstmile({
   allowedOrigins: []
 });
 
-app.route("/__firstmile", fm.routes);
+app.route("/__calibrate", fm.routes);
 ```
 
 The browser SDK then uses its default:
 
 ```ts
-firstmile({
+calibrate({
   manifest,
-  writeKey: window.FIRSTMILE_WRITE_KEY,
+  writeKey: window.CALIBRATE_WRITE_KEY,
   routes,
-  dashboard: { enabled: true, token: window.FIRSTMILE_DASHBOARD_TOKEN }
+  dashboard: { enabled: true, token: window.CALIBRATE_DASHBOARD_TOKEN }
 });
 ```
 
-The host is responsible for starting Hono. `createFirstmile` exposes credentialed ingestion at `/api/events`, the manifest at `/api/manifest`, protected aggregates at `/api/dashboard`, the projector at `/present`, bearer-protected JSONL export at `/export`, and `/healthz`.
+The host is responsible for starting Hono. `createCalibrate` exposes credentialed ingestion at `/api/events`, the manifest at `/api/manifest`, protected aggregates at `/api/dashboard`, the projector at `/present`, bearer-protected JSONL export at `/export`, and `/healthz`.
 
 ## Standalone sidecar
 
@@ -119,7 +119,7 @@ DASHBOARD_TOKEN=replace-me-too \
 WRITE_KEY=replace-with-browser-write-key \
 ALLOWED_ORIGINS=https://product.example \
 MANIFEST_JSON='{"version":"v1","groups":["signup"],"steps":[{"id":"account","group":"signup"}]}' \
-npx firstmile-sidecar
+npx calibrate-sidecar
 ```
 
 In the current unpublished checkout, build the package and run `node packages/kit/dist/sidecar.js` instead.
@@ -146,7 +146,7 @@ Forward movement completes the prior step and records the new step with `from`. 
 
 ## Controller API
 
-`firstmile(options)` initializes immediately and returns:
+`calibrate(options)` initializes immediately and returns:
 
 - `ready`: resolves when initialization finishes.
 - `view(step, nav?, from?)`: records a named position.
@@ -159,9 +159,9 @@ Forward movement completes the prior step and records the new step with `from`. 
 - `closeDashboard()`: closes the enabled dashboard overlay.
 - `destroy()`: removes listeners, timers, route wrappers, and injected UI without clearing the persisted session or outbox.
 
-Calls before initialization completes are queued and do not throw. Only one high-level instance is active per page. Calling `firstmile()` again replaces the prior instance.
+Calls before initialization completes are queued and do not throw. Only one high-level instance is active per page. Calling `calibrate()` again replaces the prior instance.
 
-`defineManifest(manifest)` validates a manifest while preserving its TypeScript type. The root export also provides the `Manifest`, `ManifestStep`, `FirstmileOptions`, `FirstmileRoute`, `FirstmileController`, and `DashboardOptions` types.
+`defineManifest(manifest)` validates a manifest while preserving its TypeScript type. The root export also provides the `Manifest`, `ManifestStep`, `CalibrateOptions`, `CalibrateRoute`, `CalibrateController`, and `DashboardOptions` types.
 
 ## In-app dashboard
 
@@ -171,7 +171,7 @@ Dashboard data requires `DASHBOARD_TOKEN`; export requires `ADMIN_TOKEN`; ingest
 
 ## Low-level tracker
 
-Import `@firstmile/sdk/tracker` for the original functions:
+Import `usecalibrate/tracker` for the original functions:
 
 - `init({ endpoint, manifest, writeKey, sessionTimeoutMs?, app?, debug? })`
 - `view(step, nav?, from?)`
@@ -201,17 +201,17 @@ Groups and steps are ordered and non-empty. Step IDs must be unique, every group
 
 ## Package exports
 
-- `@firstmile/sdk` and `@firstmile/sdk/browser`: browser-safe high-level API.
-- `@firstmile/sdk/tracker`: low-level browser tracker.
-- `@firstmile/sdk/server`: Node and Hono collector.
-- `@firstmile/sdk/manifest`: manifest types and validation.
-- `@firstmile/sdk/reducer`: event reduction API.
-- `@firstmile/sdk/snapshot`: aggregate snapshot API.
-- `@firstmile/sdk/version`: package version.
+- `usecalibrate` and `usecalibrate/browser`: browser-safe high-level API.
+- `usecalibrate/tracker`: low-level browser tracker.
+- `usecalibrate/server`: Node and Hono collector.
+- `usecalibrate/manifest`: manifest types and validation.
+- `usecalibrate/reducer`: event reduction API.
+- `usecalibrate/snapshot`: aggregate snapshot API.
+- `usecalibrate/version`: package version.
 
 ## Privacy
 
-Firstmile records named positions and lifecycle signals. The SDK never reads form values, textarea values, clipboard contents, or DOM text. The closed schema rejects arbitrary fields and prose-like strings. Integrators must use fixed machine identifiers and must not pass user-provided values into identifier fields. The route observer sends configured step IDs instead of URLs, pathnames, query parameters, or hashes.
+Calibrate records named positions and lifecycle signals. The SDK never reads form values, textarea values, clipboard contents, or DOM text. The closed schema rejects arbitrary fields and prose-like strings. Integrators must use fixed machine identifiers and must not pass user-provided values into identifier fields. The route observer sends configured step IDs instead of URLs, pathnames, query parameters, or hashes.
 
 Identifiers are bounded and validated. Events containing unknown fields are omitted at ingestion. The SDK does not scan the DOM or modify cookies.
 
@@ -219,7 +219,7 @@ Identifiers are bounded and validated. Events containing unknown fields are omit
 
 The repository includes a Render Blueprint for the sidecar. It uses Node 20, binds to Render's `PORT`, exposes `/healthz`, disables automatic deploys and previews, and configures all three credentials plus the manifest and origin allowlist.
 
-[Deploy to Render](https://render.com/deploy?repo=https%3A%2F%2Fgithub.com%2Fojusave%2Ffirstmile) |
+[Deploy to Render](https://render.com/deploy?repo=https%3A%2F%2Fgithub.com%2Fojusave%2Fusecalibrate) |
 [Render documentation](https://render.com/docs) |
 [Sign up on Render](https://dashboard.render.com/register?utm_source=github&utm_medium=referral&utm_campaign=ojus_demos&utm_content=footer_link)
 

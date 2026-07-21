@@ -1,4 +1,4 @@
-import { IDENTIFIER_MAX_LENGTH, isIdentifier } from "@firstmile/contract/meta";
+import { IDENTIFIER_MAX_LENGTH, isIdentifier } from "@usecalibrate/contract/meta";
 
 type FieldAction = "focus" | "fill" | "blank" | "blur" | "error";
 

@@ -5,29 +5,29 @@ fields; you only call the manual API for things it cannot see (like a successful
 response that means the flow shipped).
 
 ```bash
-npm install firstmile
+npm install usecalibrate
 ```
 
 ```tsx
-// src/firstmile.ts
-import { firstmile } from "firstmile";
+// src/calibrate.ts
+import { calibrate } from "usecalibrate";
 
-export const fm = firstmile({
+export const fm = calibrate({
   app: "my-app",
-  endpoint: import.meta.env.VITE_FIRSTMILE_ENDPOINT, // e.g. https://collector.example.com
+  endpoint: import.meta.env.VITE_CALIBRATE_ENDPOINT, // e.g. https://collector.example.com
 });
 ```
 
 ```tsx
 // src/main.tsx
-import "./firstmile"; // side-effect import starts autocapture once
+import "./calibrate"; // side-effect import starts autocapture once
 
 // ...render your app as usual
 ```
 
 ```tsx
 // Anywhere you know the flow completed:
-import { fm } from "./firstmile";
+import { fm } from "./calibrate";
 
 async function onSubmit() {
   const res = await createProject();
@@ -35,6 +35,6 @@ async function onSubmit() {
 }
 ```
 
-With a client router (React Router, TanStack Router, Next.js app router), Firstmile picks
+With a client router (React Router, TanStack Router, Next.js app router), Calibrate picks
 up `history.pushState` automatically, so page and flow events appear with no extra code.
 It never reads input values: only that a field was focused, filled, left blank, or errored.

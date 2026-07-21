@@ -83,11 +83,11 @@ export const eventSchema = z.discriminatedUnion("type", [
 
 export const eventBatchSchema = z.object({ events: z.array(z.unknown()) });
 
-export type FirstmileEvent = z.infer<typeof eventSchema>;
-export type EventType = FirstmileEvent["type"];
+export type CalibrateEvent = z.infer<typeof eventSchema>;
+export type EventType = CalibrateEvent["type"];
 
 /** Validates a single event, throwing a ZodError on any violation. */
-export function parseEvent(value: unknown): FirstmileEvent {
+export function parseEvent(value: unknown): CalibrateEvent {
   return eventSchema.parse(value);
 }
 
@@ -96,7 +96,7 @@ export function parseEvent(value: unknown): FirstmileEvent {
  * dropped rather than failing the whole batch, so one bad event never costs the rest.
  * Accepts either a bare array or `{ events: [] }`.
  */
-export function parseEventBatch(value: unknown): FirstmileEvent[] {
+export function parseEventBatch(value: unknown): CalibrateEvent[] {
   const candidates = Array.isArray(value)
     ? value
     : eventBatchSchema.safeParse(value).success
@@ -105,7 +105,7 @@ export function parseEventBatch(value: unknown): FirstmileEvent[] {
   if (candidates === null) {
     throw new Error("request body must be an event array or { events: [] }");
   }
-  const valid: FirstmileEvent[] = [];
+  const valid: CalibrateEvent[] = [];
   for (const candidate of candidates) {
     const result = eventSchema.safeParse(candidate);
     if (result.success) valid.push(result.data);

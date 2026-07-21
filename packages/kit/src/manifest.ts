@@ -17,7 +17,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 /**
- * Validates and projects an unknown value into the fields firstmile reads.
+ * Validates and projects an unknown value into the fields calibrate reads.
  */
 export function validateManifest(value: unknown): Manifest {
   if (!isRecord(value)) {

@@ -32,7 +32,7 @@ done
 echo "POST /api/events"
 curl --fail --silent --show-error \
   -H "Content-Type: application/json" \
-  -H "X-Firstmile-Write-Key: $WRITE_KEY" \
+  -H "X-Calibrate-Write-Key: $WRITE_KEY" \
   -d "{\"events\":[{\"sessionId\":\"smoke-session\",\"seq\":1,\"ts\":$NOW_MS,\"manifestVersion\":\"smoke-v1\",\"type\":\"session_start\"},{\"sessionId\":\"smoke-session\",\"seq\":2,\"ts\":$NOW_MS,\"manifestVersion\":\"smoke-v1\",\"type\":\"page_view\",\"step\":\"welcome\",\"nav\":\"forward\"}]}" \
   "$BASE_URL/api/events"
 echo

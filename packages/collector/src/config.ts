@@ -30,7 +30,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): ServerConfig {
     adminToken: env.ADMIN_TOKEN,
     store: {
       kind,
-      sqlitePath: env.SQLITE_PATH ?? (env.DATA_DIR !== undefined ? `${env.DATA_DIR}/firstmile.db` : "./firstmile.db"),
+      sqlitePath: env.SQLITE_PATH ?? (env.DATA_DIR !== undefined ? `${env.DATA_DIR}/calibrate.db` : "./calibrate.db"),
       ...(databaseUrl === undefined ? {} : { databaseUrl }),
     },
     destinations: {

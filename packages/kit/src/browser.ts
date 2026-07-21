@@ -9,7 +9,7 @@ import {
   validateManifest,
 } from "./manifest.js";
 import {
-  type FirstmileRoute,
+  type CalibrateRoute,
   observeRoutes,
   validateRoutes,
 } from "./route-observer.js";
@@ -18,23 +18,23 @@ import { requireIdentifier } from "./value-validation.js";
 
 export type {
   DashboardOptions,
-  FirstmileRoute,
+  CalibrateRoute,
   Manifest,
   ManifestStep,
 };
 
-export interface FirstmileOptions {
+export interface CalibrateOptions {
   manifest: Manifest;
   writeKey: string;
   sessionTimeoutMs?: number;
   endpoint?: string;
   app?: string;
   debug?: boolean;
-  routes?: readonly FirstmileRoute[];
+  routes?: readonly CalibrateRoute[];
   dashboard?: DashboardOptions;
 }
 
-export interface FirstmileController {
+export interface CalibrateController {
   readonly ready: Promise<void>;
   view(step: string, nav?: "forward" | "back", from?: string): void;
   error(step: string, code: string, attempt: number): void;
@@ -66,7 +66,7 @@ export function defineManifest<const Definition extends Manifest>(
 /**
  * Starts the browser SDK and returns a safe controller immediately.
  */
-export function firstmile(options: FirstmileOptions): FirstmileController {
+export function calibrate(options: CalibrateOptions): CalibrateController {
   activeInstance?.teardown();
 
   let live = true;
@@ -75,7 +75,7 @@ export function firstmile(options: FirstmileOptions): FirstmileController {
   let overlay: DashboardOverlayHandle | undefined;
   const pending: Array<() => void> = [];
   let normalizedManifest: Manifest | undefined;
-  let endpoint = "/__firstmile";
+  let endpoint = "/__calibrate";
 
   const instance: BrowserInstance = {
     teardown(): void {
@@ -152,7 +152,7 @@ interface InitializationHooks {
 }
 
 async function initialize(
-  options: FirstmileOptions,
+  options: CalibrateOptions,
   instance: BrowserInstance,
   hooks: InitializationHooks,
 ): Promise<void> {
@@ -163,7 +163,7 @@ async function initialize(
     }
     const manifest = validateManifest(options.manifest);
     const endpoint =
-      options.endpoint === undefined ? "/__firstmile" : options.endpoint;
+      options.endpoint === undefined ? "/__calibrate" : options.endpoint;
     if (typeof endpoint !== "string") throw new Error("endpoint must be a string");
     if (typeof options.writeKey !== "string" || options.writeKey.trim() === "") throw new Error("writeKey must be a non-empty string");
     if (options.routes !== undefined && !Array.isArray(options.routes)) {
@@ -212,7 +212,7 @@ async function initialize(
       try {
         const message =
           error instanceof Error ? error.message : "invalid configuration";
-        console.warn(`firstmile browser SDK is disabled: ${message}`);
+        console.warn(`calibrate browser SDK is disabled: ${message}`);
       } catch {
         // Logging cannot make invalid configuration observable as an exception.
       }

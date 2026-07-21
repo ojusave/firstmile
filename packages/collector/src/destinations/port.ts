@@ -1,4 +1,4 @@
-import type { FirstmileEvent } from "@firstmile/contract";
+import type { CalibrateEvent } from "@usecalibrate/contract";
 
 /**
  * A sink for newly stored events. Destinations are non-critical: a failing destination is
@@ -6,6 +6,6 @@ import type { FirstmileEvent } from "@firstmile/contract";
  */
 export interface Destination {
   readonly name: string;
-  deliver(events: readonly FirstmileEvent[]): Promise<void>;
+  deliver(events: readonly CalibrateEvent[]): Promise<void>;
   close?(): Promise<void>;
 }

@@ -1,6 +1,6 @@
 {
-  "name": "@firstmile/demo",
+  "name": "@usecalibrate/demo",
   "private": true,
   "version": "0.0.0",
-  "description": "Reserved private workspace for the Firstmile workshop demo consumer"
+  "description": "Reserved private workspace for the Calibrate workshop demo consumer"
 }

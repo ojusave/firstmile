@@ -69,7 +69,7 @@ const defaultSessionTimeoutMs = 30 * 60 * 1_000;
 function warn(): void {
   if (debug && !warningSent) {
     warningSent = true;
-    console.warn("firstmile tracker is disabled");
+    console.warn("calibrate tracker is disabled");
   }
 }
 
@@ -188,7 +188,7 @@ async function flush(): Promise<void> {
       method: "POST",
       headers: {
         "content-type": "application/json",
-        "x-firstmile-write-key": writeKey,
+        "x-calibrate-write-key": writeKey,
       },
       body: JSON.stringify({ events: batch }),
       keepalive: true,

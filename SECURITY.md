@@ -1,6 +1,6 @@
 # Security
 
-Firstmile is public source under Apache-2.0, but its packages have not been published to npm and the API is pre-1.0. Do not send secrets, form values, clipboard contents, DOM text, URLs, or user-provided values through event identifiers.
+Calibrate is public source under Apache-2.0, but its packages have not been published to npm and the API is pre-1.0. Do not send secrets, form values, clipboard contents, DOM text, URLs, or user-provided values through event identifiers.
 
 ## Reporting a vulnerability
 

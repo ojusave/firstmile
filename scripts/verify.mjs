@@ -52,11 +52,11 @@ function grepForbidden(label, pattern, directory) {
   console.log("ok");
 }
 
-console.log("firstmile verify (Prompt 1)");
+console.log("calibrate verify (Prompt 1)");
 run("lint", "npm run lint");
-run("contract build", "npm run build -w @firstmile/contract");
+run("contract build", "npm run build -w @usecalibrate/contract");
 run("typecheck", "npm run typecheck");
-run("SDK build", "npm run build -w @firstmile/sdk");
+run("SDK build", "npm run build -w usecalibrate");
 run("test", "npm run test");
 grepForbidden(
   "wall: no fakesaaspi under packages/kit",

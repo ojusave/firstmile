@@ -1,7 +1,7 @@
 {
-  "name": "@firstmile/browser",
+  "name": "@usecalibrate/browser",
   "version": "0.1.0",
-  "description": "Firstmile browser SDK. Install it, point it at your collector, and it auto-detects fields, pages, and flows without ever reading their contents.",
+  "description": "Calibrate browser SDK. Install it, point it at your collector, and it auto-detects fields, pages, and flows without ever reading their contents.",
   "type": "module",
   "sideEffects": false,
   "main": "./dist/index.js",
@@ -12,15 +12,15 @@
       "import": "./dist/index.js"
     }
   },
-  "unpkg": "./dist/firstmile.global.js",
-  "jsdelivr": "./dist/firstmile.global.js",
+  "unpkg": "./dist/calibrate.global.js",
+  "jsdelivr": "./dist/calibrate.global.js",
   "files": ["dist"],
   "scripts": {
     "build": "tsc -p tsconfig.build.json && node build.mjs",
     "typecheck": "tsc --noEmit -p tsconfig.build.json"
   },
   "dependencies": {
-    "@firstmile/contract": "0.1.0"
+    "@usecalibrate/contract": "0.1.0"
   },
   "engines": {
     "node": ">=20"

@@ -19,7 +19,7 @@ interface EventEnvelope {
   manifestVersion: string;
 }
 
-export type FirstmileEvent =
+export type CalibrateEvent =
   | (EventEnvelope & {
       type: "session_start";
       resumed?: boolean;
@@ -64,8 +64,8 @@ export type FirstmileEvent =
       persisted: boolean;
     });
 
-export type FirstmileEventPayload = FirstmileEvent extends infer Event
-  ? Event extends FirstmileEvent
+export type CalibrateEventPayload = CalibrateEvent extends infer Event
+  ? Event extends CalibrateEvent
     ? Omit<Event, keyof EventEnvelope>
     : never
   : never;
@@ -90,7 +90,7 @@ export interface SessionState {
   backtracks: number;
 }
 
-export type StoredEvent = FirstmileEvent & { anomaly?: true };
+export type StoredEvent = CalibrateEvent & { anomaly?: true };
 
 export interface ReducerResult {
   session: SessionState;
@@ -101,7 +101,7 @@ export interface ReducerResult {
 /**
  * Creates the exact initial session document for the first observed event.
  */
-export function createSessionState(event: FirstmileEvent): SessionState {
+export function createSessionState(event: CalibrateEvent): SessionState {
   return {
     sessionId: event.sessionId,
     step: null,
@@ -126,7 +126,7 @@ export function createSessionState(event: FirstmileEvent): SessionState {
  */
 export function isDuplicateEvent(
   session: SessionState,
-  event: FirstmileEvent,
+  event: CalibrateEvent,
 ): boolean {
   return (
     session.sessionId === event.sessionId && session.seqSeen.has(event.seq)
@@ -135,7 +135,7 @@ export function isDuplicateEvent(
 
 function isEarlierForwardView(
   session: SessionState,
-  event: FirstmileEvent,
+  event: CalibrateEvent,
   stepIndexes: ReadonlyMap<string, number>,
 ): boolean {
   if (event.type !== "page_view" || event.nav === "back") {
@@ -153,7 +153,7 @@ function isEarlierForwardView(
 
 function copyWithSeen(
   session: SessionState,
-  event: FirstmileEvent,
+  event: CalibrateEvent,
 ): SessionState {
   const seqSeen = new Set(session.seqSeen);
   seqSeen.add(event.seq);
@@ -165,7 +165,7 @@ function copyWithSeen(
  */
 export function reduceEvent(
   current: SessionState | undefined,
-  event: FirstmileEvent,
+  event: CalibrateEvent,
   manifest: Manifest,
 ): ReducerResult {
   const session = current ?? createSessionState(event);

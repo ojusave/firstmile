@@ -2,8 +2,8 @@ import {
   CONTRACT_VERSION,
   STORAGE_PREFIX,
   isIdentifier,
-} from "@firstmile/contract/meta";
-import type { FirstmileEvent } from "@firstmile/contract";
+} from "@usecalibrate/contract/meta";
+import type { CalibrateEvent } from "@usecalibrate/contract";
 
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown
   ? Omit<T, K>
@@ -11,7 +11,7 @@ type DistributiveOmit<T, K extends PropertyKey> = T extends unknown
 
 /** An event without the envelope the transport stamps on automatically. */
 export type EventPayload = DistributiveOmit<
-  FirstmileEvent,
+  CalibrateEvent,
   "v" | "app" | "sessionId" | "seq" | "ts" | "user"
 >;
 
@@ -33,7 +33,7 @@ export class Transport {
   private sessionId = "";
   private seq = 0;
   private user: string | undefined;
-  private outbox: FirstmileEvent[] = [];
+  private outbox: CalibrateEvent[] = [];
   private flushTimer: ReturnType<typeof setTimeout> | undefined;
   private heartbeatTimer: ReturnType<typeof setInterval> | undefined;
   private flushing = false;
@@ -62,7 +62,7 @@ export class Transport {
       const savedSeq = this.read<number | null>("seq", null);
       const savedLastSeen = this.read<number | null>("lastSeen", null);
       const savedUser = this.read<string | null>("user", null);
-      this.outbox = this.read<FirstmileEvent[]>("queue", []);
+      this.outbox = this.read<CalibrateEvent[]>("queue", []);
       const resumed =
         typeof savedSid === "string" &&
         Number.isInteger(savedSeq) &&
@@ -104,7 +104,7 @@ export class Transport {
         ts: Date.now(),
         ...(this.user === undefined ? {} : { user: this.user }),
         ...payload,
-      } as FirstmileEvent;
+      } as CalibrateEvent;
       this.seq += 1;
       this.lastSeen = event.ts;
       this.outbox.push(event);
@@ -267,7 +267,7 @@ export class Transport {
   private warn(): void {
     if (this.debug && !this.warned) {
       this.warned = true;
-      console.warn("firstmile client is disabled");
+      console.warn("calibrate client is disabled");
     }
   }
 }

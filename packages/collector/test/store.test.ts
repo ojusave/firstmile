@@ -17,7 +17,7 @@ describe("MemoryStore", () => {
 });
 
 describe("SqliteStore", () => {
-  const dir = mkdtempSync(join(tmpdir(), "firstmile-"));
+  const dir = mkdtempSync(join(tmpdir(), "calibrate-"));
   const path = join(dir, "test.db");
   afterAll(() => rmSync(dir, { recursive: true, force: true }));
 

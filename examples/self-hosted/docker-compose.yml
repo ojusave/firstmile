@@ -1,5 +1,5 @@
 # Shows the self-hosted model end to end: your app on one origin, your collector on
-# another, your data on a disk you own. There is no Firstmile cloud in this picture.
+# another, your data on a disk you own. There is no Calibrate cloud in this picture.
 services:
   # This is YOUR collector, running on YOUR infrastructure.
   collector:
@@ -23,6 +23,6 @@ services:
       - "5173:80"
     volumes:
       - ./app.html:/usr/share/nginx/html/index.html:ro
-      - ../../packages/browser/dist/firstmile.global.js:/usr/share/nginx/html/firstmile.global.js:ro
+      - ../../packages/browser/dist/calibrate.global.js:/usr/share/nginx/html/calibrate.global.js:ro
     depends_on:
       - collector

@@ -1,7 +1,7 @@
 {
-  "name": "@firstmile/contract",
+  "name": "@usecalibrate/contract",
   "version": "0.1.0",
-  "description": "The public, versioned event contract shared by every Firstmile client and collector.",
+  "description": "The public, versioned event contract shared by every Calibrate client and collector.",
   "type": "module",
   "sideEffects": false,
   "main": "./dist/index.js",

@@ -1,5 +1,5 @@
 {
-  "name": "firstmile-workspace",
+  "name": "usecalibrate-workspace",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -11,7 +11,7 @@
     "packages/kit"
   ],
   "scripts": {
-    "build": "npm run build -w @firstmile/contract && npm run build -w @firstmile/browser && npm run build -w @firstmile/collector",
+    "build": "npm run build -w @usecalibrate/contract && npm run build -w @usecalibrate/browser && npm run build -w @usecalibrate/collector",
     "test": "vitest run",
     "lint": "eslint .",
     "typecheck": "npm run typecheck --workspaces --if-present",

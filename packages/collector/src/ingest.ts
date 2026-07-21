@@ -1,4 +1,4 @@
-import { parseEventBatch, type FirstmileEvent } from "@firstmile/contract";
+import { parseEventBatch, type CalibrateEvent } from "@usecalibrate/contract";
 import {
   buildSnapshot,
   type DashboardSnapshot,
@@ -50,7 +50,7 @@ export class Collector {
   /** Validates and ingests a raw request body. Returns how many new events were stored. */
   async ingest(body: unknown): Promise<{ accepted: number }> {
     const events = parseEventBatch(body);
-    const stored: FirstmileEvent[] = [];
+    const stored: CalibrateEvent[] = [];
     for (const event of events) {
       const isNew = await this.store.append(event);
       if (!isNew) continue;
@@ -94,7 +94,7 @@ export class Collector {
     for (const event of events) this.apply(event);
   }
 
-  private apply(event: FirstmileEvent): void {
+  private apply(event: CalibrateEvent): void {
     this.sessions.set(event.sessionId, reduce(this.sessions.get(event.sessionId), event));
 
     if (event.type === "flow_step" || event.type === "page") {
@@ -126,7 +126,7 @@ export class Collector {
 }
 
 /** Turns an event into a short, PII-free activity line for the dashboard feed. */
-function humanize(event: FirstmileEvent): string | null {
+function humanize(event: CalibrateEvent): string | null {
   switch (event.type) {
     case "session_start":
       return event.resumed === true ? "someone came back" : "someone started";

@@ -32,10 +32,10 @@
 
   <div class="step" id="step-done" data-route="/success"><h2>Done.</h2></div>
 
-  <script src="/firstmile.global.js"></script>
+  <script src="/calibrate.global.js"></script>
   <script>
-    // endpoint points at YOUR collector, not a Firstmile cloud.
-    const fm = firstmile({ app: "self-hosted-demo", endpoint: "http://localhost:8787", debug: true });
+    // endpoint points at YOUR collector, not a Calibrate cloud.
+    const fm = calibrate({ app: "self-hosted-demo", endpoint: "http://localhost:8787", debug: true });
 
     const steps = ["step-account", "step-project", "step-done"];
     let i = 0;

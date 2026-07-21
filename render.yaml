@@ -2,14 +2,14 @@
 
 services:
   - type: web
-    name: firstmile-sidecar
+    name: calibrate-sidecar
     runtime: node
     plan: starter
     # Collector state lives in-process, so keep a single instance: multiple
     # instances would each hold a partial, inconsistent view of the funnel.
     numInstances: 1
     # The sidecar only needs the kit built; the autocapture packages are unrelated.
-    buildCommand: npm ci && npm run build -w @firstmile/sdk
+    buildCommand: npm ci && npm run build -w usecalibrate
     startCommand: node packages/kit/dist/sidecar.js
     healthCheckPath: /healthz
     autoDeployTrigger: off
@@ -43,9 +43,9 @@ services:
       # restarts; it also pins the service to one instance with stop-then-start
       # deploys (a mounted disk cannot be shared or rolled).
       # - key: PERSIST_PATH
-      #   value: /var/data/firstmile.jsonl
+      #   value: /var/data/calibrate.jsonl
     # disk:
-    #   name: firstmile-data
+    #   name: calibrate-data
     #   mountPath: /var/data
     #   sizeGB: 1
 

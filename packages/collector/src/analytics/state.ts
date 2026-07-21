@@ -1,4 +1,4 @@
-import type { FirstmileEvent } from "@firstmile/contract";
+import type { CalibrateEvent } from "@usecalibrate/contract";
 
 export type Presence =
   | "active"
@@ -35,7 +35,7 @@ export interface SessionState {
   backtracks: number;
 }
 
-function createState(event: FirstmileEvent): SessionState {
+function createState(event: CalibrateEvent): SessionState {
   return {
     sessionId: event.sessionId,
     user: event.user ?? null,
@@ -57,7 +57,7 @@ function createState(event: FirstmileEvent): SessionState {
  */
 export function reduce(
   current: SessionState | undefined,
-  event: FirstmileEvent,
+  event: CalibrateEvent,
 ): SessionState {
   const state = current ?? createState(event);
   state.lastSeen = Math.max(state.lastSeen, event.ts);

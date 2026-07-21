@@ -43,12 +43,12 @@ function collectGraph(entry: string): string[] {
 describe("package contract", () => {
   it("publishes an ESM-only browser default with explicit subpaths", () => {
     expect(packageJson).toMatchObject({
-      name: "@firstmile/sdk",
+      name: "usecalibrate",
       type: "module",
       sideEffects: false,
       main: "./dist/browser.js",
       types: "./dist/browser.d.ts",
-      bin: { "firstmile-sidecar": "./dist/sidecar.js" },
+      bin: { "calibrate-sidecar": "./dist/sidecar.js" },
     });
     expect(Object.keys(packageJson.exports)).toEqual([
       ".",

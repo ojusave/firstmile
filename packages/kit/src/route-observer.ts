@@ -1,6 +1,6 @@
 import type { Manifest } from "./manifest.js";
 
-export interface FirstmileRoute {
+export interface CalibrateRoute {
   path: string;
   step: string;
   shipped?: boolean;
@@ -26,7 +26,7 @@ export function normalizePathname(path: string): string {
  * Rejects route declarations that cannot be matched without collecting URLs.
  */
 export function validateRoutes(
-  routes: readonly FirstmileRoute[],
+  routes: readonly CalibrateRoute[],
   manifest: Manifest,
 ): void {
   const steps = new Set(manifest.steps.map((step) => step.id));
@@ -51,7 +51,7 @@ export function validateRoutes(
  * Observes History API navigation and maps pathnames to manifest steps.
  */
 export function observeRoutes(
-  routes: readonly FirstmileRoute[],
+  routes: readonly CalibrateRoute[],
   manifest: Manifest,
   actions: RouteActions,
 ): () => void {
@@ -59,7 +59,7 @@ export function observeRoutes(
   const stepIndexes = new Map(
     manifest.steps.map((step, index) => [step.id, index]),
   );
-  const routeMap = new Map<string, FirstmileRoute>();
+  const routeMap = new Map<string, CalibrateRoute>();
   for (const route of routes) {
     const path = normalizePathname(route.path);
     routeMap.set(path, { ...route, path });

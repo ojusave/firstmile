@@ -1,6 +1,6 @@
 # Event contract
 
-This is the public surface of Firstmile. Any platform that can send an HTTP request can
+This is the public surface of Calibrate. Any platform that can send an HTTP request can
 produce events; the browser SDK is just the reference client. Everything here is enforced
 by the collector at ingestion, so a malformed or over-sharing event is dropped rather than
 stored.

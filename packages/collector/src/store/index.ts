@@ -26,14 +26,14 @@ export async function createStore(config: StoreConfig): Promise<Store> {
     return PostgresStore.create(config.databaseUrl);
   }
 
-  const path = config.sqlitePath ?? "./firstmile.db";
+  const path = config.sqlitePath ?? "./calibrate.db";
   try {
     const { SqliteStore } = await import("./sqlite.js");
     return new SqliteStore(path);
   } catch (error) {
     const message = error instanceof Error ? error.message : "unknown error";
     console.warn(
-      `[firstmile] could not open SQLite at ${path} (${message}); ` +
+      `[calibrate] could not open SQLite at ${path} (${message}); ` +
         `falling back to in-memory storage. Data will not persist across restarts.`,
     );
     return new MemoryStore();

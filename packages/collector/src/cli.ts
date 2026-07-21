@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { PRODUCT_NAME } from "@firstmile/contract";
+import { PRODUCT_NAME } from "@usecalibrate/contract";
 import { loadConfig } from "./config.js";
 import { Collector } from "./ingest.js";
 import { createServer } from "./server.js";
@@ -11,12 +11,12 @@ async function main(): Promise<void> {
   const app = createServer(collector, config);
 
   const server = app.listen(config.port, "0.0.0.0", () => {
-    console.log(`[firstmile] ${PRODUCT_NAME} collector on http://0.0.0.0:${config.port}`);
-    console.log(`[firstmile] store: ${config.store.kind} · dashboard: /`);
+    console.log(`[calibrate] ${PRODUCT_NAME} collector on http://0.0.0.0:${config.port}`);
+    console.log(`[calibrate] store: ${config.store.kind} · dashboard: /`);
   });
 
   const shutdown = (signal: string): void => {
-    console.log(`[firstmile] ${signal} received, shutting down`);
+    console.log(`[calibrate] ${signal} received, shutting down`);
     server.close(() => {
       void collector.close().then(() => process.exit(0));
     });
@@ -26,6 +26,6 @@ async function main(): Promise<void> {
 }
 
 main().catch((error: unknown) => {
-  console.error("[firstmile] failed to start:", error);
+  console.error("[calibrate] failed to start:", error);
   process.exit(1);
 });
