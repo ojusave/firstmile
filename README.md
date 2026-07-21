@@ -1,13 +1,13 @@
-# Firstmile
+# Calibrate
 
-Self-hostable onboarding and funnel diagnostics that autocapture the flow without ever reading its contents.
+Open-source product observability that shows how your product is used, starting with onboarding and funnel friction, without reading user-entered content.
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](./LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D20-brightgreen.svg)](https://nodejs.org)
 
-> Firstmile is a placeholder name and will change before any package release. The packages are not published to npm.
+> The `usecalibrate` package has not been published to npm yet.
 
-Install one package, point it at your app, and Firstmile detects the pages, fields, and the flow between them, then streams that structure to a collector you run. It records that an email field was focused, filled, or errored. It never records what someone typed. Most funnel tools make you choose between "see everything, inherit a PII problem" and "instrument every step by hand." Firstmile takes a third path: autocapture the shape of the journey, leave the contents in the browser.
+Install one package, point it at your app, and Calibrate detects the pages, fields, and the flow between them, then streams that structure to a collector you run. It records that an email field was focused, filled, or errored. It never records what someone typed. Most funnel tools make you choose between "see everything, inherit a PII problem" and "instrument every step by hand." Calibrate takes a third path: autocapture the shape of the journey, leave the contents in the browser.
 
 - [Highlights](#highlights)
 - [How it works](#how-it-works)
@@ -40,13 +40,13 @@ A client sends events to the collector. The collector validates them against the
 
 ## The privacy guarantee
 
-Firstmile records named positions and a closed set of interaction signals. It does not read input values, textarea contents, clipboard contents, DOM text, or arbitrary attributes. The route observer never sends full URLs, query strings, or hashes: dynamic-looking path segments (numeric ids, uuids, hashes) collapse to `:id` before anything leaves the page, so a real user id in a URL never becomes a route.
+Calibrate records named positions and a closed set of interaction signals. It does not read input values, textarea contents, clipboard contents, DOM text, or arbitrary attributes. The route observer never sends full URLs, query strings, or hashes: dynamic-looking path segments (numeric ids, uuids, hashes) collapse to `:id` before anything leaves the page, so a real user id in a URL never becomes a route.
 
 The floor is a shared validation rule. Every identifier on the wire is 1 to 128 characters matching `^[A-Za-z0-9:/][A-Za-z0-9._:/-]*$`. Prose, emails, and quoted text fail that rule, so they cannot ride along in a field the schema would otherwise accept. The collector enforces it a second time at ingestion. See [docs/contract.md](./docs/contract.md) for the full event vocabulary.
 
 ## Quick start
 
-Firstmile is a four-package workspace and is not yet published to npm. Build it from a checkout:
+Calibrate is a four-package workspace and is not yet published to npm. Build it from a checkout:
 
 ```bash
 npm install
@@ -57,20 +57,20 @@ Run the collector. With no configuration it uses a local SQLite file and serves 
 
 ```bash
 node packages/collector/dist/cli.js
-# [firstmile] Firstmile collector on http://0.0.0.0:8787
-# [firstmile] store: sqlite · dashboard: /
+# [calibrate] Calibrate collector on http://0.0.0.0:8787
+# [calibrate] store: sqlite · dashboard: /
 ```
 
-Open `http://localhost:8787` for the dashboard. Once published, the same collector will run with `npx @firstmile/collector`.
+Open `http://localhost:8787` for the dashboard. Once published, the same collector will run with `npx @usecalibrate/collector`.
 
 ## Usage
 
 **A web app with a bundler:**
 
 ```ts
-import { firstmile } from "@firstmile/browser";
+import { calibrate } from "@usecalibrate/browser";
 
-const fm = firstmile({
+const fm = calibrate({
   app: "my-app",
   endpoint: "http://localhost:8787",
 });
@@ -81,8 +81,8 @@ That single call starts autocapture. With a client router, page and flow events 
 **A plain HTML page** adds the SDK with one script tag. See [`examples/plain-html`](./examples/plain-html) for a runnable multi-step form. The published CDN form will be:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/firstmile"></script>
-<script>firstmile({ app: "site", endpoint: "https://collector.example.com" });</script>
+<script src="https://cdn.jsdelivr.net/npm/usecalibrate"></script>
+<script>calibrate({ app: "site", endpoint: "https://collector.example.com" });</script>
 ```
 
 **The manual API** covers what autocapture cannot see:
@@ -104,7 +104,7 @@ The collector reads everything from the environment with production-safe default
 |---|---|---|
 | `PORT` | `8787` | Port to bind on `0.0.0.0`. |
 | `STORE` | `sqlite` | `sqlite`, `postgres`, or `memory`. Defaults to `postgres` if `DATABASE_URL` is set. |
-| `SQLITE_PATH` | `./firstmile.db` | SQLite file path. |
+| `SQLITE_PATH` | `./calibrate.db` | SQLite file path. |
 | `DATA_DIR` | Not set | Directory for the SQLite file when `SQLITE_PATH` is unset. |
 | `DATABASE_URL` | Not set | Postgres connection string. Required when `STORE=postgres`. |
 | `ALLOWED_ORIGINS` | Not set | Comma-separated origins allowed to post cross-origin. |
@@ -121,8 +121,8 @@ The collector is a standard Node service, so any host works. Two equal paths:
 **Docker:**
 
 ```bash
-docker build -f packages/collector/Dockerfile -t firstmile-collector .
-docker run -p 8787:8787 -v "$PWD/data:/data" firstmile-collector
+docker build -f packages/collector/Dockerfile -t calibrate-collector .
+docker run -p 8787:8787 -v "$PWD/data:/data" calibrate-collector
 ```
 
 **Node directly:** run `node packages/collector/dist/cli.js` behind whatever process manager or platform you use (a VPS, Fly, Railway, Render, Kubernetes). Set `DATABASE_URL` for durable storage and `ALLOWED_ORIGINS` for the sites that post to it.
@@ -137,11 +137,11 @@ examples/           plain-html and react integrations.
 docs/contract.md    The event contract, documented as the public surface.
 ```
 
-Modules depend only on `@firstmile/contract`, never on each other's internals. Storage and destinations sit behind ports so a new backend is one file behind an existing interface.
+Modules depend only on `@usecalibrate/contract`, never on each other's internals. Storage and destinations sit behind ports so a new backend is one file behind an existing interface.
 
 ## Workshop kit (packages/kit)
 
-Alongside the autocapture packages, this repo carries `packages/kit`: the vendored Firstmile workshop kit (tracker, in-memory collector, and sidecar) used by the DevRelCon demo. This repo owns it. Downstream repos (the fakesaaspi demo) vendor `packages/kit` via their own `scripts/sync-kit.sh` and must not hand-edit their copy; make kit changes here and land them on `main`.
+Alongside the autocapture packages, this repo carries `packages/kit`: the vendored Calibrate workshop kit (tracker, in-memory collector, and sidecar) used by the DevRelCon demo. This repo owns it. Downstream repos (the fakesaaspi demo) vendor `packages/kit` via their own `scripts/sync-kit.sh` and must not hand-edit their copy; make kit changes here and land them on `main`.
 
 The sidecar exposes `POST /admin/reset` (admin-token gated), which clears its in-memory sessions and events. Sidecar deployments lose that state on every deploy or restart anyway, so reset gives operators an explicit, immediate way to start clean.
 

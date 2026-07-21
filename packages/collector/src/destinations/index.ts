@@ -1,4 +1,4 @@
-import type { FirstmileEvent } from "@firstmile/contract";
+import type { CalibrateEvent } from "@usecalibrate/contract";
 import type { Destination } from "./port.js";
 import { StdoutDestination } from "./stdout.js";
 import { WebhookDestination } from "./webhook.js";
@@ -26,7 +26,7 @@ export function createDestinations(config: DestinationConfig): Destination[] {
  */
 export async function fanOut(
   destinations: readonly Destination[],
-  events: readonly FirstmileEvent[],
+  events: readonly CalibrateEvent[],
 ): Promise<void> {
   if (destinations.length === 0 || events.length === 0) return;
   await Promise.all(
@@ -35,7 +35,7 @@ export async function fanOut(
         await destination.deliver(events);
       } catch (error) {
         const message = error instanceof Error ? error.message : "unknown error";
-        console.warn(`[firstmile] destination "${destination.name}" failed: ${message}`);
+        console.warn(`[calibrate] destination "${destination.name}" failed: ${message}`);
       }
     }),
   );

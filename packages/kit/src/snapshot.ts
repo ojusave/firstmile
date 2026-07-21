@@ -1,6 +1,6 @@
 import type { Manifest } from "./manifest.js";
 import type {
-  FirstmileEvent,
+  CalibrateEvent,
   SessionState,
   StoredEvent,
 } from "./reducer.js";
@@ -339,7 +339,7 @@ export function buildSnapshot(input: SnapshotInput): DashboardSnapshot {
   const startedSessionIds = new Set(
     events
       .filter(
-        (event): event is Extract<FirstmileEvent, { type: "session_start" }> =>
+        (event): event is Extract<CalibrateEvent, { type: "session_start" }> =>
           event.type === "session_start",
       )
       .map((event) => event.sessionId),

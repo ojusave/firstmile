@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { firstmile } from "../src/index.js";
+import { calibrate } from "../src/index.js";
 
 interface Captured {
   events: Array<Record<string, unknown>>;
@@ -10,7 +10,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe("firstmile client", () => {
+describe("calibrate client", () => {
   it("stamps the envelope and posts events to the collector", async () => {
     const bodies: Captured[] = [];
     vi.stubGlobal(
@@ -21,7 +21,7 @@ describe("firstmile client", () => {
       }),
     );
 
-    const fm = firstmile({ app: "test", endpoint: "https://collector.example", autocapture: false });
+    const fm = calibrate({ app: "test", endpoint: "https://collector.example", autocapture: false });
     await fm.ready;
     fm.page("/signup");
 
@@ -43,7 +43,7 @@ describe("firstmile client", () => {
       }),
     );
 
-    const fm = firstmile({ app: "test", endpoint: "https://collector.example", autocapture: false });
+    const fm = calibrate({ app: "test", endpoint: "https://collector.example", autocapture: false });
     await fm.ready;
     fm.field("email", "email", "fill");
 

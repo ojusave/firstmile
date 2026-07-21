@@ -1,4 +1,4 @@
-# Multi-stage build for the Firstmile collector. Runs on any container host.
+# Multi-stage build for the Calibrate collector. Runs on any container host.
 FROM node:20-slim AS build
 WORKDIR /app
 COPY package.json package-lock.json* ./
@@ -6,7 +6,7 @@ COPY packages/contract/package.json packages/contract/
 COPY packages/collector/package.json packages/collector/
 RUN npm install --workspaces --include-workspace-root
 COPY . .
-RUN npm run build -w @firstmile/contract && npm run build -w @firstmile/collector
+RUN npm run build -w @usecalibrate/contract && npm run build -w @usecalibrate/collector
 
 FROM node:20-slim AS runtime
 WORKDIR /app

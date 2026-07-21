@@ -1,4 +1,4 @@
-import type { FirstmileEvent } from "@firstmile/contract";
+import type { CalibrateEvent } from "@usecalibrate/contract";
 import type { Store } from "./port.js";
 
 /**
@@ -6,10 +6,10 @@ import type { Store } from "./port.js";
  * cannot be opened. Data does not survive restarts.
  */
 export class MemoryStore implements Store {
-  private readonly events: FirstmileEvent[] = [];
+  private readonly events: CalibrateEvent[] = [];
   private readonly seen = new Set<string>();
 
-  async append(event: FirstmileEvent): Promise<boolean> {
+  async append(event: CalibrateEvent): Promise<boolean> {
     const key = `${event.sessionId}:${event.seq}`;
     if (this.seen.has(key)) return false;
     this.seen.add(key);
@@ -17,7 +17,7 @@ export class MemoryStore implements Store {
     return true;
   }
 
-  async all(): Promise<FirstmileEvent[]> {
+  async all(): Promise<CalibrateEvent[]> {
     return [...this.events];
   }
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Firstmile plain-HTML example</title>
+  <title>Calibrate plain-HTML example</title>
   <style>
     body { font: 16px/1.6 system-ui, sans-serif; max-width: 520px; margin: 40px auto; padding: 0 16px; }
     label { display: block; margin: 14px 0 4px; font-weight: 600; }
@@ -37,17 +37,17 @@
 
   <!--
     One script tag. Swap the src for the CDN build in production:
-    <script src="https://cdn.jsdelivr.net/npm/firstmile"></script>
+    <script src="https://cdn.jsdelivr.net/npm/usecalibrate"></script>
   -->
-  <script src="../../packages/browser/dist/firstmile.global.js"></script>
+  <script src="../../packages/browser/dist/calibrate.global.js"></script>
   <script>
-    const fm = firstmile({
+    const fm = calibrate({
       app: "plain-html-demo",
       endpoint: "http://localhost:8787",
     });
 
     // This demo has no real router, so it nudges the route for autocapture. A real SPA
-    // would not need this: firstmile observes history changes on its own.
+    // would not need this: calibrate observes history changes on its own.
     const steps = ["step-account", "step-project", "step-done"];
     let index = 0;
     function show(next) {

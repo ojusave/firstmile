@@ -82,7 +82,7 @@ describe("sidecar configuration", () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-Firstmile-Write-Key": "write-secret",
+          "X-Calibrate-Write-Key": "write-secret",
         },
         body: JSON.stringify({
           events: [

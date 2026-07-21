@@ -1,20 +1,20 @@
-import { DEFAULT_ENDPOINT_PATH, isIdentifier } from "@firstmile/contract/meta";
-import type { FirstmileController, FirstmileOptions } from "./config.js";
+import { DEFAULT_ENDPOINT_PATH, isIdentifier } from "@usecalibrate/contract/meta";
+import type { CalibrateController, CalibrateOptions } from "./config.js";
 import { observeFields } from "./fields.js";
 import { observeRoutes } from "./route.js";
 import { Transport } from "./transport.js";
 
-export type { FirstmileController, FirstmileOptions } from "./config.js";
+export type { CalibrateController, CalibrateOptions } from "./config.js";
 export { routeId } from "./route.js";
 
 let activeDestroy: (() => void) | undefined;
 
 /**
- * Starts a Firstmile client. With autocapture on (the default) it detects pages, an
+ * Starts a Calibrate client. With autocapture on (the default) it detects pages, an
  * inferred flow, and field interactions and streams them to the collector. It never reads
  * field values or DOM text. Starting a second client replaces the first on the page.
  */
-export function firstmile(options: FirstmileOptions = {}): FirstmileController {
+export function calibrate(options: CalibrateOptions = {}): CalibrateController {
   activeDestroy?.();
 
   const app = isIdentifier(options.app ?? "default") ? (options.app ?? "default") : "default";

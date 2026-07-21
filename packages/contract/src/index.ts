@@ -16,6 +16,6 @@ export {
   eventBatchSchema,
   parseEvent,
   parseEventBatch,
-  type FirstmileEvent,
+  type CalibrateEvent,
   type EventType,
 } from "./schema.js";

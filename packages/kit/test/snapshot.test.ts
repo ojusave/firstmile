@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Manifest } from "../src/manifest.js";
 import type {
-  FirstmileEventPayload,
+  CalibrateEventPayload,
   SessionState,
   StoredEvent,
 } from "../src/reducer.js";
@@ -44,7 +44,7 @@ function session(
 function event(
   sessionId: string,
   seq: number,
-  value: FirstmileEventPayload,
+  value: CalibrateEventPayload,
 ): StoredEvent {
   return {
     sessionId,

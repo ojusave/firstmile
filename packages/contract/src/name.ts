@@ -1,12 +1,8 @@
-/**
- * Single source of truth for the product name. The name is a placeholder and will
- * change; everything user-visible or wire-visible derives from here so a rename is a
- * one-line edit, never a find-and-replace.
- */
-export const PRODUCT_NAME = "Firstmile";
+/** Single source of truth for the product name. */
+export const PRODUCT_NAME = "Calibrate";
 
 /** Lowercase slug used for storage keys, the CLI, and default paths. */
-export const PRODUCT_SLUG = "firstmile";
+export const PRODUCT_SLUG = "calibrate";
 
 /** Default same-origin path where the browser client posts events. */
 export const DEFAULT_ENDPOINT_PATH = `/__${PRODUCT_SLUG}`;

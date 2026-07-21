@@ -1,9 +1,9 @@
-# Build: Firstmile
+# Build: Calibrate
 
-> Firstmile is a placeholder name and will change. See the rename-safety rule in Code quality.
+> Product name: Calibrate. npm and GitHub slug: `usecalibrate`.
 
-Build **Firstmile**, an open-source, self-hostable tool for diagnosing onboarding and
-funnel flows. Someone installs one package, points it at their app, and Firstmile
+Build **Calibrate**, an open-source, self-hostable tool for diagnosing onboarding and
+funnel flows. Someone installs one package, points it at their app, and Calibrate
 auto-detects the fields, pages, and flow, records how people move through it, and sends
 that data to a destination they choose. It ships with a self-hosted dashboard UI.
 
@@ -17,10 +17,10 @@ documented contract, and a five-minute path from install to seeing data.
 
 ## The one hard rule: capture structure and behavior, never content
 
-Firstmile auto-instruments the UI but MUST NEVER read what a user types, pastes, or the
+Calibrate auto-instruments the UI but MUST NEVER read what a user types, pastes, or the
 text content of the DOM. This is the core identity of the product and a privacy guarantee.
 
-Firstmile MAY capture:
+Calibrate MAY capture:
 - that a field exists, its stable name/id, and its type (e.g. email, password, select)
 - field interaction: focused, filled, left blank, blurred, validation error (as a bounded
   machine code), attempt count
@@ -29,7 +29,7 @@ Firstmile MAY capture:
 - lifecycle: session start/resume, visibility, page hide, flow completion ("shipped")
 - copy/paste as artifact NAMES and accept/reject booleans, never the copied/pasted value
 
-Firstmile MUST NOT capture:
+Calibrate MUST NOT capture:
 - field values, input contents, textarea contents, clipboard contents
 - DOM text, innerText, or arbitrary attributes
 - full URLs, query strings, or hash fragments (only mapped/known route identifiers)
@@ -50,10 +50,10 @@ validated. Reject events with arbitrary fields.
 - Testing/lint/format: the ecosystem standard (vitest, eslint, prettier).
 
 ## Distribution (this IS the adoption path)
-- `npm install firstmile` for the browser/client SDK (ESM, no host assumptions).
-- A CDN-served IIFE/ESM build so a plain HTML page can add Firstmile with one `<script>`.
-- `npx firstmile` to run the collector locally with zero config (SQLite file).
-- A Docker image (`docker run firstmile/collector`) for containerized hosts.
+- `npm install usecalibrate` for the browser/client SDK (ESM, no host assumptions).
+- A CDN-served IIFE/ESM build so a plain HTML page can add Calibrate with one `<script>`.
+- `npx calibrate-sidecar` to run the collector locally with zero config (SQLite file).
+- A Docker image (`docker run usecalibrate/collector`) for containerized hosts.
 - The collector binds `0.0.0.0:$PORT`, reads all config from env vars or a config file,
   and has NO dependency on any single hosting provider.
 
@@ -78,7 +78,7 @@ Do not wrap two-line helpers in ports.
 
 ## Fault isolation
 - Instrumentation NEVER throws into the host app. All SDK operations are wrapped; failures
-  are swallowed (with an optional debug warning). A broken Firstmile must not break the app.
+  are swallowed (with an optional debug warning). A broken Calibrate must not break the app.
 - The collector degrades gracefully: a failing destination is logged, retried with backoff,
   and never takes down ingestion.
 - Timeouts on every network call. Bounded queues, batching, and retry with a cap in the SDK.
@@ -92,10 +92,10 @@ complexity. Every view has explicit loading, empty, and error states.
 - Strong typing. Lint/format on save. Enforce module boundaries so features import only
   through published entry points.
 - Short doc comment on every public function (what, not how).
-- The product name is a placeholder and WILL change. Derive it from a single source of
-  truth (one constant or the package.json name). Never hardcode the name inline in the
+- Derive the product name from a single source of truth (one constant or the package.json
+  name). Never hardcode the name inline in the
   package id, CDN identifier, localStorage prefix, default endpoint path, CLI command, or
-  UI title. Renaming must be a one-line change, not a find-and-replace.
+  UI title.
 - Tests for: the event contract validator, each Store and Destination adapter against its
   port, the flow-inference logic, and fault behavior (simulate a failing destination and
   assert ingestion still works).

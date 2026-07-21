@@ -2,8 +2,8 @@ import { describe, expect, it } from "vitest";
 import type { Manifest } from "../src/manifest.js";
 import {
   reduceEvent,
-  type FirstmileEvent,
-  type FirstmileEventPayload,
+  type CalibrateEvent,
+  type CalibrateEventPayload,
   type SessionState,
 } from "../src/reducer.js";
 
@@ -20,20 +20,20 @@ const manifest: Manifest = {
 function event(
   seq: number,
   ts: number,
-  value: FirstmileEventPayload,
-): FirstmileEvent {
+  value: CalibrateEventPayload,
+): CalibrateEvent {
   return {
     sessionId: "session-1",
     seq,
     ts,
     manifestVersion: "v1",
     ...value,
-  } as FirstmileEvent;
+  } as CalibrateEvent;
 }
 
 function apply(
   session: SessionState | undefined,
-  nextEvent: FirstmileEvent,
+  nextEvent: CalibrateEvent,
 ): SessionState {
   return reduceEvent(session, nextEvent, manifest).session;
 }

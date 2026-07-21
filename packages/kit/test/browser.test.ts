@@ -4,9 +4,9 @@ import { readFileSync } from "node:fs";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   defineManifest,
-  firstmile,
-  type FirstmileController,
-  type FirstmileOptions,
+  calibrate,
+  type CalibrateController,
+  type CalibrateOptions,
 } from "../src/browser.js";
 
 const manifest = defineManifest({
@@ -18,12 +18,12 @@ const manifest = defineManifest({
   ],
 });
 
-let controller: FirstmileController | undefined;
+let controller: CalibrateController | undefined;
 
 function start(
-  options: Omit<FirstmileOptions, "manifest" | "writeKey"> = {},
-): FirstmileController {
-  return firstmile({ manifest, writeKey: "browser-write-key", ...options });
+  options: Omit<CalibrateOptions, "manifest" | "writeKey"> = {},
+): CalibrateController {
+  return calibrate({ manifest, writeKey: "browser-write-key", ...options });
 }
 
 (
@@ -103,7 +103,7 @@ describe("browser facade", () => {
     await settle();
 
     expect(fetchMock).toHaveBeenCalledWith(
-      "/__firstmile/api/events",
+      "/__calibrate/api/events",
       expect.objectContaining({ method: "POST" }),
     );
     expect(recorded(fetchMock).map((event) => event.type)).toEqual([
@@ -147,7 +147,7 @@ describe("browser facade", () => {
     await first.ready;
 
     let backdrop = document
-      .querySelector<HTMLElement>("[data-firstmile-dashboard]")
+      .querySelector<HTMLElement>("[data-calibrate-dashboard]")
       ?.shadowRoot?.querySelector<HTMLDivElement>(".backdrop");
     expect(backdrop?.hidden).toBe(true);
     first.openDashboard();
@@ -161,7 +161,7 @@ describe("browser facade", () => {
     });
     await controller.ready;
     backdrop = document
-      .querySelector<HTMLElement>("[data-firstmile-dashboard]")
+      .querySelector<HTMLElement>("[data-calibrate-dashboard]")
       ?.shadowRoot?.querySelector<HTMLDivElement>(".backdrop");
     first.openDashboard();
     first.destroy();
@@ -213,7 +213,7 @@ describe("browser facade", () => {
       expect.arrayContaining(["step_complete", "shipped"]),
     );
     expect(JSON.stringify(events)).not.toContain("private");
-    expect(document.querySelectorAll("[data-firstmile-dashboard]")).toHaveLength(
+    expect(document.querySelectorAll("[data-calibrate-dashboard]")).toHaveLength(
       1,
     );
   });

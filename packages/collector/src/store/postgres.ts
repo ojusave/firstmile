@@ -1,5 +1,5 @@
 import pg from "pg";
-import type { FirstmileEvent } from "@firstmile/contract";
+import type { CalibrateEvent } from "@usecalibrate/contract";
 import type { Store } from "./port.js";
 
 /**
@@ -28,7 +28,7 @@ export class PostgresStore implements Store {
     return new PostgresStore(pool);
   }
 
-  async append(event: FirstmileEvent): Promise<boolean> {
+  async append(event: CalibrateEvent): Promise<boolean> {
     const result = await this.pool.query(
       `INSERT INTO events (session_id, seq, ts, payload)
        VALUES ($1, $2, $3, $4)
@@ -38,8 +38,8 @@ export class PostgresStore implements Store {
     return (result.rowCount ?? 0) > 0;
   }
 
-  async all(): Promise<FirstmileEvent[]> {
-    const result = await this.pool.query<{ payload: FirstmileEvent }>(
+  async all(): Promise<CalibrateEvent[]> {
+    const result = await this.pool.query<{ payload: CalibrateEvent }>(
       `SELECT payload FROM events ORDER BY id`,
     );
     return result.rows.map((row) => row.payload);

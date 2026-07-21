@@ -1,9 +1,9 @@
 ---
-name: firstmile-integration
-description: Integrate, review, or troubleshoot the Firstmile browser SDK, embedded Hono collector, standalone sidecar, manifest, event tracking, dashboard, and Render Blueprint.
+name: calibrate-integration
+description: Integrate, review, or troubleshoot the Calibrate browser SDK, embedded Hono collector, standalone sidecar, manifest, event tracking, dashboard, and Render Blueprint.
 ---
 
-# Firstmile integration
+# Calibrate integration
 
 Use this package to instrument named positions and lifecycle signals in a fixed onboarding flow.
 
@@ -19,7 +19,7 @@ Use this package to instrument named positions and lifecycle signals in a fixed 
 
 1. Declare ordered groups and steps. Every group must contain at least one contiguous block of steps.
 2. Start the embedded Hono collector or standalone sidecar with all three credentials.
-3. Initialize `firstmile({ manifest, writeKey, ... })` in the browser.
+3. Initialize `calibrate({ manifest, writeKey, ... })` in the browser.
 4. Add exact route mappings or call the controller methods manually.
 5. If enabling the overlay, supply `dashboard: { enabled: true, token }`.
 6. Verify ingestion, dashboard authorization, shipment, session rollover, and export authorization.

@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { existsSync, readFileSync } from "node:fs";
-import { FIRSTMILE_VERSION } from "../src/version.js";
+import { CALIBRATE_VERSION } from "../src/version.js";
 
 describe("scaffold", () => {
   it("exports a semver-shaped version string", () => {
-    expect(FIRSTMILE_VERSION).toMatch(/^\d+\.\d+\.\d+$/);
+    expect(CALIBRATE_VERSION).toMatch(/^\d+\.\d+\.\d+$/);
   });
 
   it("ships explicit Apache-2.0 package licensing", () => {
@@ -37,7 +37,7 @@ describe("scaffold", () => {
     // The workshop scaffold additionally pins the kit build + verify harness.
     // An upstream product root may carry its own toolchain, so only assert
     // these when the workshop harness (scripts.verify) is present.
-    if (packageJson.name === "firstmile") {
+    if (packageJson.name === "usecalibrate") {
       expect(packageJson.scripts.build).toBe(
         "npm run build --workspaces --if-present",
       );
@@ -60,7 +60,7 @@ describe("scaffold", () => {
     );
     expect(script).toContain('target: "es2018"');
     expect(script).toContain('format: "iife"');
-    expect(script).toContain('globalName: "firstmile"');
+    expect(script).toContain('globalName: "calibrate"');
     expect(script).toContain('outfile: join(dist, "tracker.min.js")');
     expect(script).toContain('format: "esm"');
     expect(script).toContain('outfile: join(dist, "tracker.mjs")');

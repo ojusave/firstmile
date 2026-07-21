@@ -4,7 +4,7 @@ import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import type { Manifest } from "./manifest.js";
 import { validateManifest } from "./manifest.js";
-import { createFirstmile } from "./server.js";
+import { createCalibrate } from "./server.js";
 
 function adminAuthorized(header: string | undefined, expected: string): boolean {
   const token = /^Bearer[ \t]+(.+)$/i.exec(header ?? "")?.[1] ?? "";
@@ -50,7 +50,7 @@ try {
   const port = parsePort(process.env.PORT);
   const manifest = await loadManifest();
   const adminToken = requiredEnv("ADMIN_TOKEN");
-  const firstmile = createFirstmile({
+  const calibrate = createCalibrate({
     manifest,
     adminToken,
     dashboardToken: requiredEnv("DASHBOARD_TOKEN"),
@@ -70,13 +70,13 @@ try {
     if (!adminAuthorized(context.req.header("Authorization"), adminToken)) {
       return context.json({ ok: false, error: "unauthorized" }, 401);
     }
-    firstmile.reset();
+    calibrate.reset();
     return context.json({ ok: true });
   });
-  app.route("/", firstmile.routes);
+  app.route("/", calibrate.routes);
 
   const server = serve({ fetch: app.fetch, hostname: "0.0.0.0", port }, (info) => {
-    process.stderr.write(`firstmile sidecar listening on ${info.address}\n`);
+    process.stderr.write(`calibrate sidecar listening on ${info.address}\n`);
   });
 
   // Render sends SIGTERM on every deploy and restart. Flush the persistence
@@ -85,8 +85,8 @@ try {
   const shutdown = (signal: string): void => {
     if (closing) return;
     closing = true;
-    process.stderr.write(`firstmile sidecar received ${signal}, shutting down\n`);
-    firstmile.close();
+    process.stderr.write(`calibrate sidecar received ${signal}, shutting down\n`);
+    calibrate.close();
     // In production serve() returns a live server; guard so the handler is also
     // safe when it is stubbed (e.g. under test) and there is nothing to close.
     const closable = server as

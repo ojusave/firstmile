@@ -1,6 +1,6 @@
 # Self-hosted example
 
-Shows the whole point of Firstmile: **your app, your collector, your data.** No Firstmile
+Shows the whole point of Calibrate: **your app, your collector, your data.** No Calibrate
 cloud is involved. The app sends events to a collector you run, and the data lands on a disk
 you own.
 
@@ -8,12 +8,12 @@ Three services, three owners, all yours:
 
 - **App** on `http://localhost:5173` (stands in for your product)
 - **Collector** on `http://localhost:8787` (the service you deploy)
-- **Data** in `./data/firstmile.db` (a file on your disk)
+- **Data** in `./data/calibrate.db` (a file on your disk)
 
 ## Run it
 
 ```
-1. cd firstmile
+1. cd calibrate
 2. npm install && npm run build      # builds the SDK file the app loads
 3. cd examples/self-hosted
 4. docker compose up --build
@@ -31,7 +31,7 @@ Then:
 ## Prove the ownership
 
 - **The data is yours.** After clicking through, look at `examples/self-hosted/data/`. Your
-  events are in `firstmile.db` on your machine. Nothing left your infrastructure.
+  events are in `calibrate.db` on your machine. Nothing left your infrastructure.
 - **The endpoint is yours.** In `app.html`, `endpoint` is `http://localhost:8787`, your
   collector. Swap it for your deployed collector URL in production. There is no shared
   address to send to.

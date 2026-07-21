@@ -14,7 +14,7 @@ import { fileURLToPath } from "node:url";
 import { build } from "esbuild";
 
 const root = join(fileURLToPath(import.meta.url), "..", "..");
-const temporary = mkdtempSync(join(tmpdir(), "firstmile-package-"));
+const temporary = mkdtempSync(join(tmpdir(), "calibrate-package-"));
 const consumer = join(temporary, "consumer");
 let tarball;
 
@@ -32,14 +32,14 @@ function assert(condition, message) {
 }
 
 try {
-  run("npm", ["run", "build", "--workspace", "@firstmile/sdk"]);
+  run("npm", ["run", "build", "--workspace", "usecalibrate"]);
 
   const packOutput = run(
     "npm",
     [
       "pack",
       "--workspace",
-      "@firstmile/sdk",
+      "usecalibrate",
       "--pack-destination",
       temporary,
       "--json",
@@ -79,7 +79,7 @@ try {
   mkdirSync(consumer);
   writeFileSync(
     join(consumer, "package.json"),
-    JSON.stringify({ name: "firstmile-package-smoke", private: true, type: "module" }),
+    JSON.stringify({ name: "calibrate-package-smoke", private: true, type: "module" }),
   );
   run(
     "npm",
@@ -100,14 +100,14 @@ try {
   writeFileSync(
     browserFixture,
     [
-      'import { defineManifest, firstmile } from "@firstmile/sdk";',
+      'import { defineManifest, calibrate } from "usecalibrate";',
       "",
       "const manifest = defineManifest({",
       '  version: "smoke-v1",',
       '  groups: ["start"],',
       '  steps: [{ id: "welcome", group: "start" }],',
       "});",
-      'const client = firstmile({ manifest, writeKey: "smoke-write-key" });',
+      'const client = calibrate({ manifest, writeKey: "smoke-write-key" });',
       'client.view("welcome");',
       "client.destroy();",
       "",
@@ -158,9 +158,9 @@ try {
   writeFileSync(
     serverFixture,
     [
-      'import { createFirstmile } from "@firstmile/sdk/server";',
+      'import { createCalibrate } from "usecalibrate/server";',
       "",
-      "const server = createFirstmile({",
+      "const server = createCalibrate({",
       '  adminToken: "smoke-token",',
       '  dashboardToken: "smoke-dashboard-token",',
       '  writeKey: "smoke-write-key",',

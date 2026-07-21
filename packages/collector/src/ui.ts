@@ -1,4 +1,4 @@
-import { PRODUCT_NAME } from "@firstmile/contract";
+import { PRODUCT_NAME } from "@usecalibrate/contract";
 
 const FAVICON =
   "data:image/svg+xml," +

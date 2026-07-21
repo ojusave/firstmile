@@ -1,7 +1,7 @@
 {
-  "name": "@firstmile/collector",
+  "name": "@usecalibrate/collector",
   "version": "0.1.0",
-  "description": "Self-hostable Firstmile collector: ingest, persistence, and a dashboard. Runs anywhere Node runs.",
+  "description": "Self-hostable Calibrate collector: ingest, persistence, and a dashboard. Runs anywhere Node runs.",
   "type": "module",
   "main": "./dist/server.js",
   "types": "./dist/server.d.ts",
@@ -12,7 +12,7 @@
     }
   },
   "bin": {
-    "firstmile-collector": "./dist/cli.js"
+    "calibrate-collector": "./dist/cli.js"
   },
   "files": ["dist"],
   "scripts": {
@@ -21,7 +21,7 @@
     "typecheck": "tsc --noEmit -p tsconfig.build.json"
   },
   "dependencies": {
-    "@firstmile/contract": "0.1.0",
+    "@usecalibrate/contract": "0.1.0",
     "better-sqlite3": "^11.10.0",
     "express": "^4.21.2",
     "pg": "^8.13.1"

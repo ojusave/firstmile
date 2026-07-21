@@ -3,10 +3,10 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { Hono } from "hono";
-import type { FirstmileEvent } from "../src/reducer.js";
+import type { CalibrateEvent } from "../src/reducer.js";
 import {
-  createFirstmile as createServer,
-  type FirstmileServerOptions,
+  createCalibrate as createServer,
+  type CalibrateServerOptions,
 } from "../src/server.js";
 
 const manifest = {
@@ -20,15 +20,15 @@ const manifest = {
 
 function event(
   seq: number,
-  values: Partial<FirstmileEvent> & Pick<FirstmileEvent, "type">,
-): FirstmileEvent {
+  values: Partial<CalibrateEvent> & Pick<CalibrateEvent, "type">,
+): CalibrateEvent {
   return {
     sessionId: "session-1",
     seq,
     ts: 1_000 + seq,
     manifestVersion: "v1",
     ...values,
-  } as FirstmileEvent;
+  } as CalibrateEvent;
 }
 
 async function json(response: Response): Promise<unknown> {
@@ -37,12 +37,12 @@ async function json(response: Response): Promise<unknown> {
 
 const writeHeaders = {
   "Content-Type": "application/json",
-  "X-Firstmile-Write-Key": "write-secret",
+  "X-Calibrate-Write-Key": "write-secret",
 };
 const dashboardHeaders = { Authorization: "Bearer dashboard-secret" };
 
-function createFirstmile(
-  options: Omit<FirstmileServerOptions, "dashboardToken" | "writeKey">,
+function createCalibrate(
+  options: Omit<CalibrateServerOptions, "dashboardToken" | "writeKey">,
 ) {
   return createServer({
     dashboardToken: "dashboard-secret",
@@ -51,7 +51,7 @@ function createFirstmile(
   });
 }
 
-describe("createFirstmile", () => {
+describe("createCalibrate", () => {
   beforeEach(() => {
     vi.useFakeTimers();
     vi.setSystemTime(10_000);
@@ -64,7 +64,7 @@ describe("createFirstmile", () => {
   });
 
   it("ingests a batch synchronously and exposes its snapshot", async () => {
-    const server = createFirstmile({
+    const server = createCalibrate({
       manifest,
       adminToken: "secret",
       meta: () => ({ mode: "live" }),
@@ -104,7 +104,7 @@ describe("createFirstmile", () => {
   });
 
   it("dedupes by session and sequence before storage and reduction", async () => {
-    const server = createFirstmile({ manifest, adminToken: "secret" });
+    const server = createCalibrate({ manifest, adminToken: "secret" });
     const start = event(1, { type: "session_start" });
     const response = await server.routes.request("/api/events", {
       method: "POST",
@@ -119,7 +119,7 @@ describe("createFirstmile", () => {
   });
 
   it("rejects events for another manifest or an unknown step", async () => {
-    const server = createFirstmile({ manifest, adminToken: "secret" });
+    const server = createCalibrate({ manifest, adminToken: "secret" });
     const weird = event(8, {
       type: "page_view",
       step: "not-in-manifest",
@@ -140,7 +140,7 @@ describe("createFirstmile", () => {
   });
 
   it("flags reducer anomalies while still storing and acknowledging them", async () => {
-    const server = createFirstmile({ manifest, adminToken: "secret" });
+    const server = createCalibrate({ manifest, adminToken: "secret" });
     const batch = [
       event(1, { type: "page_view", step: "two", nav: "forward" }),
       event(2, { type: "page_view", step: "one", nav: "forward" }),
@@ -162,7 +162,7 @@ describe("createFirstmile", () => {
   });
 
   it("rejects a non-array events envelope", async () => {
-    const server = createFirstmile({ manifest, adminToken: "secret" });
+    const server = createCalibrate({ manifest, adminToken: "secret" });
     const response = await server.routes.request("/api/events", {
       method: "POST",
       headers: writeHeaders,
@@ -189,7 +189,7 @@ describe("createFirstmile", () => {
   ])(
     "omits invalid siblings without failing the batch %#",
     async (body) => {
-      const server = createFirstmile({ manifest, adminToken: "secret" });
+      const server = createCalibrate({ manifest, adminToken: "secret" });
       const response = await server.routes.request("/api/events", {
         method: "POST",
         headers: writeHeaders,
@@ -204,7 +204,7 @@ describe("createFirstmile", () => {
   );
 
   it("records valid mixed-batch siblings and blocks prose channels", async () => {
-    const server = createFirstmile({ manifest, adminToken: "secret" });
+    const server = createCalibrate({ manifest, adminToken: "secret" });
     const start = event(1, { type: "session_start" });
     const unknownStep = event(4, {
       type: "page_view",
@@ -248,7 +248,7 @@ describe("createFirstmile", () => {
   });
 
   it("returns manifest, dashboard, health, and projector routes", async () => {
-    const server = createFirstmile({ manifest, adminToken: "secret" });
+    const server = createCalibrate({ manifest, adminToken: "secret" });
 
     const manifestResponse = await server.routes.request("/api/manifest");
     expect((await server.routes.request("/api/dashboard")).status).toBe(401);
@@ -269,7 +269,7 @@ describe("createFirstmile", () => {
     const html = await presentResponse.text();
     expect(html).toContain("window.location.pathname");
     expect(html).toContain("fetch(dashboardPath()");
-    expect(html).not.toContain('"/__firstmile"');
+    expect(html).not.toContain('"/__calibrate"');
     expect(html).toContain("setInterval(poll, 1000)");
     expect(html).toContain('event.key.toLowerCase() === "d"');
     expect(html).toContain("age > 5");
@@ -294,20 +294,20 @@ describe("createFirstmile", () => {
   });
 
   it("works when mounted under a Hono prefix", async () => {
-    const server = createFirstmile({ manifest, adminToken: "secret" });
+    const server = createCalibrate({ manifest, adminToken: "secret" });
     const app = new Hono();
-    app.route("/__firstmile", server.routes);
+    app.route("/__calibrate", server.routes);
     const start = event(1, { type: "session_start" });
 
-    const ingest = await app.request("/__firstmile/api/events", {
+    const ingest = await app.request("/__calibrate/api/events", {
       method: "POST",
       headers: writeHeaders,
       body: JSON.stringify({ events: [start] }),
     });
-    const dashboard = await app.request("/__firstmile/api/dashboard", {
+    const dashboard = await app.request("/__calibrate/api/dashboard", {
       headers: dashboardHeaders,
     });
-    const present = await app.request("/__firstmile/present");
+    const present = await app.request("/__calibrate/present");
 
     expect(ingest.status).toBe(200);
     expect(await dashboard.json()).toMatchObject({
@@ -318,7 +318,7 @@ describe("createFirstmile", () => {
   });
 
   it("sets no-store on every response", async () => {
-    const server = createFirstmile({ manifest, adminToken: "secret" });
+    const server = createCalibrate({ manifest, adminToken: "secret" });
     const requests: Array<[string, RequestInit?]> = [
       ["/api/manifest"],
       ["/api/dashboard"],
@@ -343,7 +343,7 @@ describe("createFirstmile", () => {
   });
 
   it("gates JSONL export with the exact admin token", async () => {
-    const server = createFirstmile({ manifest, adminToken: "a token" });
+    const server = createCalibrate({ manifest, adminToken: "a token" });
     const stored = event(1, { type: "session_start" });
     await server.routes.request("/api/events", {
       method: "POST",
@@ -364,7 +364,7 @@ describe("createFirstmile", () => {
   });
 
   it("sets CORS only for allowed origins and answers preflight", async () => {
-    const server = createFirstmile({
+    const server = createCalibrate({
       manifest,
       adminToken: "secret",
       allowedOrigins: ["https://allowed.example"],
@@ -389,7 +389,7 @@ describe("createFirstmile", () => {
       "POST",
     );
     expect(preflight.headers.get("access-control-allow-headers")).toContain(
-      "X-Firstmile-Write-Key",
+      "X-Calibrate-Write-Key",
     );
   });
 
@@ -403,7 +403,7 @@ describe("createFirstmile", () => {
       }),
     ).toThrow(/must be distinct/);
 
-    const server = createFirstmile({
+    const server = createCalibrate({
       manifest,
       adminToken: "secret",
       limits: { maxBodyBytes: 80, maxRequestsPerWindow: 2 },
@@ -423,7 +423,7 @@ describe("createFirstmile", () => {
   });
 
   it("reset() clears sessions and stored events", async () => {
-    const server = createFirstmile({ manifest, adminToken: "secret" });
+    const server = createCalibrate({ manifest, adminToken: "secret" });
     await server.routes.request("/api/events", {
       method: "POST",
       headers: writeHeaders,
@@ -446,10 +446,10 @@ describe("createFirstmile", () => {
   });
 
   it("persists stored events to disk and replays them on restart", async () => {
-    const dir = mkdtempSync(join(tmpdir(), "firstmile-persist-"));
+    const dir = mkdtempSync(join(tmpdir(), "calibrate-persist-"));
     const path = join(dir, "events.jsonl");
     try {
-      const first = createFirstmile({ manifest, adminToken: "secret", persistPath: path });
+      const first = createCalibrate({ manifest, adminToken: "secret", persistPath: path });
       await first.routes.request("/api/events", {
         method: "POST",
         headers: writeHeaders,
@@ -468,7 +468,7 @@ describe("createFirstmile", () => {
       first.close();
 
       // A fresh server with the same path replays the file on boot.
-      const restarted = createFirstmile({ manifest, adminToken: "secret", persistPath: path });
+      const restarted = createCalibrate({ manifest, adminToken: "secret", persistPath: path });
       expect(restarted.sessionCount()).toBe(1);
       expect(restarted.snapshot().totals).toEqual(totalsBefore);
       expect(restarted.exportJsonl()).toBe(exportBefore);
@@ -479,10 +479,10 @@ describe("createFirstmile", () => {
   });
 
   it("reset() truncates the persistence file so a restart starts empty", async () => {
-    const dir = mkdtempSync(join(tmpdir(), "firstmile-persist-"));
+    const dir = mkdtempSync(join(tmpdir(), "calibrate-persist-"));
     const path = join(dir, "events.jsonl");
     try {
-      const server = createFirstmile({ manifest, adminToken: "secret", persistPath: path });
+      const server = createCalibrate({ manifest, adminToken: "secret", persistPath: path });
       await server.routes.request("/api/events", {
         method: "POST",
         headers: writeHeaders,
@@ -500,7 +500,7 @@ describe("createFirstmile", () => {
       expect(server.sessionCount()).toBe(0);
       server.close();
 
-      const restarted = createFirstmile({ manifest, adminToken: "secret", persistPath: path });
+      const restarted = createCalibrate({ manifest, adminToken: "secret", persistPath: path });
       expect(restarted.sessionCount()).toBe(0);
       restarted.close();
     } finally {
@@ -509,7 +509,7 @@ describe("createFirstmile", () => {
   });
 
   it("replays valid lines and skips malformed ones without crashing", () => {
-    const dir = mkdtempSync(join(tmpdir(), "firstmile-persist-"));
+    const dir = mkdtempSync(join(tmpdir(), "calibrate-persist-"));
     const path = join(dir, "events.jsonl");
     try {
       const good1 = JSON.stringify(event(1, { type: "session_start" }));
@@ -521,7 +521,7 @@ describe("createFirstmile", () => {
         `${good1}\nnot json at all\n{"partial":true}\n\n${good2}\n`,
       );
 
-      const server = createFirstmile({ manifest, adminToken: "secret", persistPath: path });
+      const server = createCalibrate({ manifest, adminToken: "secret", persistPath: path });
       expect(server.sessionCount()).toBe(1);
       expect(server.snapshot().totals.started).toBe(1);
       server.close();

@@ -41,7 +41,7 @@ export function createDashboardOverlay(
   }
   if (typeof options.token !== "string" || options.token.trim() === "") throw new Error("dashboard token is required when the overlay is enabled");
   const host = document.createElement("div");
-  host.dataset.firstmileDashboard = "";
+  host.dataset.calibrateDashboard = "";
   const shadow = host.attachShadow({ mode: "open" });
   shadow.innerHTML = `
     <style>
@@ -71,17 +71,17 @@ export function createDashboardOverlay(
       }
     </style>
     <button class="launch" type="button" aria-haspopup="dialog"
-      aria-controls="firstmile-dashboard-panel" aria-expanded="false">
+      aria-controls="calibrate-dashboard-panel" aria-expanded="false">
       Dashboard
     </button>
     <div class="backdrop" hidden>
-      <section class="panel" id="firstmile-dashboard-panel" role="dialog"
-        aria-modal="true" aria-labelledby="firstmile-dashboard-title">
+      <section class="panel" id="calibrate-dashboard-panel" role="dialog"
+        aria-modal="true" aria-labelledby="calibrate-dashboard-title">
         <div class="bar">
-          <strong id="firstmile-dashboard-title">Firstmile dashboard</strong>
+          <strong id="calibrate-dashboard-title">Calibrate dashboard</strong>
           <button class="close" type="button" aria-label="Close dashboard">Close</button>
         </div>
-        <iframe title="Firstmile dashboard" src="${escapeAttribute(dashboardUrl(endpoint, options.token))}"></iframe>
+        <iframe title="Calibrate dashboard" src="${escapeAttribute(dashboardUrl(endpoint, options.token))}"></iframe>
       </section>
     </div>
   `;

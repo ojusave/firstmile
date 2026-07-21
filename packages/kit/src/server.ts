@@ -12,7 +12,7 @@ import type { Manifest } from "./manifest.js";
 import { validateManifest } from "./manifest.js";
 import {
   reduceEvent,
-  type FirstmileEvent,
+  type CalibrateEvent,
   type SessionState,
   type StoredEvent,
 } from "./reducer.js";
@@ -36,14 +36,14 @@ function presentResponse(): Response {
   });
 }
 
-export interface FirstmileServerOptions {
+export interface CalibrateServerOptions {
   manifest: Manifest;
   adminToken: string;
   dashboardToken: string;
   writeKey: string;
   allowedOrigins?: readonly string[];
   presence?: PresenceThresholds;
-  limits?: FirstmileLimits;
+  limits?: CalibrateLimits;
   meta?: () => unknown;
   /**
    * Optional path to a JSONL file. When set, every stored event is appended and
@@ -53,7 +53,7 @@ export interface FirstmileServerOptions {
   persistPath?: string;
 }
 
-export interface FirstmileLimits {
+export interface CalibrateLimits {
   maxBodyBytes?: number;
   maxBatchSize?: number;
   maxSessions?: number;
@@ -65,7 +65,7 @@ export interface FirstmileLimits {
   maxRequestsPerWindow?: number;
 }
 
-export const DEFAULT_FIRSTMILE_LIMITS = {
+export const DEFAULT_CALIBRATE_LIMITS = {
   maxBodyBytes: 64 * 1024,
   maxBatchSize: 50,
   maxSessions: 10_000,
@@ -77,7 +77,7 @@ export const DEFAULT_FIRSTMILE_LIMITS = {
   maxRequestsPerWindow: 120,
 } as const;
 
-export interface FirstmileServer {
+export interface CalibrateServer {
   routes: Hono;
   snapshot(): DashboardSnapshot;
   exportJsonl(): string;
@@ -96,7 +96,7 @@ function setCorsHeaders(
     setHeader("Access-Control-Allow-Origin", origin);
     setHeader("Vary", "Origin");
     setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-    setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type, X-Firstmile-Write-Key");
+    setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type, X-Calibrate-Write-Key");
   }
 }
 
@@ -138,7 +138,7 @@ async function readLimitedText(request: Request, maxBytes: number): Promise<stri
   return new TextDecoder().decode(bytes);
 }
 
-function isReplayableEvent(value: unknown): value is FirstmileEvent {
+function isReplayableEvent(value: unknown): value is CalibrateEvent {
   if (typeof value !== "object" || value === null) return false;
   const candidate = value as Record<string, unknown>;
   return (
@@ -150,22 +150,22 @@ function isReplayableEvent(value: unknown): value is FirstmileEvent {
   );
 }
 
-function referencesKnownSteps(event: FirstmileEvent, stepIds: ReadonlySet<string>): boolean {
+function referencesKnownSteps(event: CalibrateEvent, stepIds: ReadonlySet<string>): boolean {
   if ((event.type === "page_view" || event.type === "step_error" || event.type === "step_complete" || event.type === "paste_result") && !stepIds.has(event.step)) return false;
   return event.type !== "page_view" || event.from === undefined || stepIds.has(event.from);
 }
 
 /**
- * Creates a synchronous in-memory firstmile server and its Hono routes.
+ * Creates a synchronous in-memory calibrate server and its Hono routes.
  */
-export function createFirstmile(
-  options: FirstmileServerOptions,
-): FirstmileServer {
+export function createCalibrate(
+  options: CalibrateServerOptions,
+): CalibrateServer {
   const manifest = validateManifest(options.manifest);
   const credentials = [options.adminToken, options.dashboardToken, options.writeKey];
   if (credentials.some((value) => typeof value !== "string" || value.trim() === "")) throw new Error("adminToken, dashboardToken, and writeKey must be non-empty");
   if (new Set(credentials).size !== 3) throw new Error("adminToken, dashboardToken, and writeKey must be distinct");
-  const limits = { ...DEFAULT_FIRSTMILE_LIMITS, ...options.limits };
+  const limits = { ...DEFAULT_CALIBRATE_LIMITS, ...options.limits };
   for (const [name, value] of Object.entries(limits)) {
     if (!Number.isSafeInteger(value) || value <= 0) throw new Error(`${name} must be a positive safe integer`);
   }
@@ -261,7 +261,7 @@ export function createFirstmile(
   });
 
   routes.post("/api/events", async (context) => {
-    if (!secretsMatch(context.req.header("X-Firstmile-Write-Key"), options.writeKey)) return context.json({ ok: false, error: "unauthorized" }, 401);
+    if (!secretsMatch(context.req.header("X-Calibrate-Write-Key"), options.writeKey)) return context.json({ ok: false, error: "unauthorized" }, 401);
     let batch: ReturnType<typeof validateEventBatchDetailed>;
     try {
       const declared = Number(context.req.header("Content-Length"));
@@ -388,4 +388,4 @@ export type {
   SessionState,
   StoredEvent,
 };
-export { FIRSTMILE_VERSION } from "./version.js";
+export { CALIBRATE_VERSION } from "./version.js";

@@ -1,4 +1,4 @@
-import type { FirstmileEvent } from "./reducer.js";
+import type { CalibrateEvent } from "./reducer.js";
 import {
   CODE_MAX_LENGTH,
   requireIdentifier,
@@ -58,7 +58,7 @@ function hasExpectedType(
 /**
  * Validates the closed position-only event vocabulary at the HTTP boundary.
  */
-export function validateEvent(value: unknown): FirstmileEvent {
+export function validateEvent(value: unknown): CalibrateEvent {
   if (!isRecord(value)) {
     throw new Error("event must be an object");
   }
@@ -127,19 +127,19 @@ export function validateEvent(value: unknown): FirstmileEvent {
     requireIdentifier(value.code, 'event field "code"', CODE_MAX_LENGTH);
   }
 
-  return value as unknown as FirstmileEvent;
+  return value as unknown as CalibrateEvent;
 }
 
 /**
  * Accepts a structurally valid batch and returns each schema-valid event.
  * Invalid siblings are omitted so valid events are still recorded.
  */
-export function validateEventBatch(value: unknown): FirstmileEvent[] {
+export function validateEventBatch(value: unknown): CalibrateEvent[] {
   return validateEventBatchDetailed(value).events;
 }
 
 export interface ValidatedEventBatch {
-  events: FirstmileEvent[];
+  events: CalibrateEvent[];
   rejected: number;
 }
 
@@ -157,7 +157,7 @@ export function validateEventBatchDetailed(value: unknown, maxBatchSize = 50): V
   if (candidates.length > maxBatchSize) {
     throw new Error(`event batch cannot contain more than ${maxBatchSize} events`);
   }
-  const valid: FirstmileEvent[] = [];
+  const valid: CalibrateEvent[] = [];
   let rejected = 0;
   for (const event of candidates) {
     try {

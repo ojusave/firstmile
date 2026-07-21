@@ -1,16 +1,16 @@
 {
-  "name": "@firstmile/sdk",
+  "name": "usecalibrate",
   "version": "0.1.0",
   "description": "Self-hosted, position-only onboarding instrumentation SDK",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ojusave/firstmile.git",
+    "url": "git+https://github.com/ojusave/usecalibrate.git",
     "directory": "packages/kit"
   },
-  "homepage": "https://github.com/ojusave/firstmile#readme",
+  "homepage": "https://github.com/ojusave/usecalibrate#readme",
   "bugs": {
-    "url": "https://github.com/ojusave/firstmile/issues"
+    "url": "https://github.com/ojusave/usecalibrate/issues"
   },
   "publishConfig": {
     "access": "public"
@@ -54,7 +54,7 @@
     }
   },
   "bin": {
-    "firstmile-sidecar": "./dist/sidecar.js"
+    "calibrate-sidecar": "dist/sidecar.js"
   },
   "files": [
     "dist",

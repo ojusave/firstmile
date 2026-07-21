@@ -1,5 +1,5 @@
 import Database from "better-sqlite3";
-import type { FirstmileEvent } from "@firstmile/contract";
+import type { CalibrateEvent } from "@usecalibrate/contract";
 import type { Store } from "./port.js";
 
 /**
@@ -28,7 +28,7 @@ export class SqliteStore implements Store {
     );
   }
 
-  async append(event: FirstmileEvent): Promise<boolean> {
+  async append(event: CalibrateEvent): Promise<boolean> {
     const result = this.insert.run(
       event.sessionId,
       event.seq,
@@ -38,11 +38,11 @@ export class SqliteStore implements Store {
     return result.changes > 0;
   }
 
-  async all(): Promise<FirstmileEvent[]> {
+  async all(): Promise<CalibrateEvent[]> {
     const rows = this.db
       .prepare(`SELECT payload FROM events ORDER BY id`)
       .all() as Array<{ payload: string }>;
-    return rows.map((row) => JSON.parse(row.payload) as FirstmileEvent);
+    return rows.map((row) => JSON.parse(row.payload) as CalibrateEvent);
   }
 
   async count(): Promise<number> {

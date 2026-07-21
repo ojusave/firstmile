@@ -1,4 +1,4 @@
-import { CONTRACT_VERSION, type FirstmileEvent } from "@firstmile/contract";
+import { CONTRACT_VERSION, type CalibrateEvent } from "@usecalibrate/contract";
 
 let clock = 1_700_000_000_000;
 
@@ -7,7 +7,7 @@ export function event(
   sessionId: string,
   seq: number,
   payload: Record<string, unknown>,
-): FirstmileEvent {
+): CalibrateEvent {
   clock += 1_000;
   return {
     v: CONTRACT_VERSION,
@@ -16,5 +16,5 @@ export function event(
     seq,
     ts: clock,
     ...payload,
-  } as FirstmileEvent;
+  } as CalibrateEvent;
 }

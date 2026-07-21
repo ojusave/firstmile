@@ -1,4 +1,4 @@
-import { CONTRACT_VERSION, PRODUCT_NAME } from "@firstmile/contract";
+import { CONTRACT_VERSION, PRODUCT_NAME } from "@usecalibrate/contract";
 import express, { type Express, type NextFunction, type Request, type Response } from "express";
 import type { ServerConfig } from "./config.js";
 import { Collector } from "./ingest.js";

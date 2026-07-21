@@ -1,4 +1,4 @@
-import type { FirstmileEvent } from "@firstmile/contract";
+import type { CalibrateEvent } from "@usecalibrate/contract";
 import type { Destination } from "./port.js";
 
 const MAX_ATTEMPTS = 3;
@@ -18,7 +18,7 @@ export class WebhookDestination implements Destination {
     this.url = url;
   }
 
-  async deliver(events: readonly FirstmileEvent[]): Promise<void> {
+  async deliver(events: readonly CalibrateEvent[]): Promise<void> {
     for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
       try {
         const controller = new AbortController();
@@ -38,7 +38,7 @@ export class WebhookDestination implements Destination {
       } catch (error) {
         if (attempt === MAX_ATTEMPTS) {
           const message = error instanceof Error ? error.message : "unknown error";
-          console.warn(`[firstmile] webhook delivery failed after ${attempt} attempts: ${message}`);
+          console.warn(`[calibrate] webhook delivery failed after ${attempt} attempts: ${message}`);
           return;
         }
         await delay(BASE_DELAY_MS * 2 ** (attempt - 1));
