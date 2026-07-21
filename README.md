@@ -1,6 +1,11 @@
 # Firstmile
 
-Self-hostable onboarding and funnel diagnostics that autocapture the flow without ever reading its contents.
+See where users get stuck in your signup or onboarding flow without collecting
+what they typed.
+
+Firstmile automatically records which pages users visit, which fields they
+focus, fill, or fail, and whether the flow reaches completion. It never records
+input values, page text, query strings, or full URLs.
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](./LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D20-brightgreen.svg)](https://nodejs.org)
@@ -9,16 +14,34 @@ Self-hostable onboarding and funnel diagnostics that autocapture the flow withou
 
 Install one package, point it at your app, and Firstmile detects the pages, fields, and the flow between them, then streams that structure to a collector you run. It records that an email field was focused, filled, or errored. It never records what someone typed. Most funnel tools make you choose between "see everything, inherit a PII problem" and "instrument every step by hand." Firstmile takes a third path: autocapture the shape of the journey, leave the contents in the browser.
 
-- [Highlights](#highlights)
+- [Try it locally](#try-it-locally)
+- [Usage](#usage)
 - [How it works](#how-it-works)
 - [The privacy guarantee](#the-privacy-guarantee)
-- [Quick start](#quick-start)
-- [Usage](#usage)
 - [Configuration](#configuration)
 - [Deploy](#deploy)
 - [Project structure](#project-structure)
 - [Development](#development)
 - [Current limits](#current-limits)
+
+## Try it locally
+
+Requirements: Node.js 20 or newer.
+
+Run these commands from the repository root:
+
+```bash
+npm install
+npm run build
+node packages/collector/dist/cli.js
+```
+
+Open <http://localhost:8787> to see the dashboard. To generate sample events,
+open [`examples/plain-html/index.html`](./examples/plain-html/index.html) in a
+browser and complete the form.
+
+You should see the collector running locally and the captured flow appear in
+the dashboard.
 
 ## Highlights
 
@@ -44,24 +67,8 @@ Firstmile records named positions and a closed set of interaction signals. It do
 
 The floor is a shared validation rule. Every identifier on the wire is 1 to 128 characters matching `^[A-Za-z0-9:/][A-Za-z0-9._:/-]*$`. Prose, emails, and quoted text fail that rule, so they cannot ride along in a field the schema would otherwise accept. The collector enforces it a second time at ingestion. See [docs/contract.md](./docs/contract.md) for the full event vocabulary.
 
-## Quick start
-
-Firstmile is a four-package workspace and is not yet published to npm. Build it from a checkout:
-
-```bash
-npm install
-npm run build
-```
-
-Run the collector. With no configuration it uses a local SQLite file and serves a dashboard on port 8787:
-
-```bash
-node packages/collector/dist/cli.js
-# [firstmile] Firstmile collector on http://0.0.0.0:8787
-# [firstmile] store: sqlite · dashboard: /
-```
-
-Open `http://localhost:8787` for the dashboard. Once published, the same collector will run with `npx @firstmile/collector`.
+Firstmile is a four-package workspace and is not yet published to npm. Once
+published, the collector will run with `npx @firstmile/collector`.
 
 ## Usage
 
