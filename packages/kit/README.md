@@ -28,7 +28,7 @@ npm pack --workspace usecalibrate
 Install the resulting tarball in another project:
 
 ```sh
-npm install /Users/ojusave/Desktop/Samples/usecalibrate/usecalibrate-0.1.0.tgz
+npm install /Users/ojusave/Desktop/Samples/usecalibrate/usecalibrate-0.1.1.tgz
 ```
 
 ## Browser quickstart
@@ -234,7 +234,7 @@ The repository is public. The deploy still creates private service credentials, 
 - The default collector limits are designed for small workshops and evaluations and use 24-hour retention.
 - The package is ESM-only. Server usage requires Node.js 20 or newer.
 - The API is pre-1.0 and may change.
-- Version `0.1.0` is published on npm under `usecalibrate`.
+- The package is published on npm under `usecalibrate`.
 - The source repository is public under Apache-2.0.
 
 License: [Apache-2.0](./LICENSE).

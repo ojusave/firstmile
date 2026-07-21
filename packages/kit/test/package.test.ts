@@ -48,7 +48,7 @@ describe("package contract", () => {
       sideEffects: false,
       main: "./dist/browser.js",
       types: "./dist/browser.d.ts",
-      bin: { "calibrate-sidecar": "./dist/sidecar.js" },
+      bin: { "calibrate-sidecar": "dist/sidecar.js" },
     });
     expect(Object.keys(packageJson.exports)).toEqual([
       ".",
