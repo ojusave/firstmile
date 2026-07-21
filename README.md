@@ -30,11 +30,13 @@ Install one package, point it at your app, and Firstmile detects the pages, fiel
 
 ## How it works
 
-![Architecture diagram](static/images/architecture-diagram.png)
+<!-- TODO: replace with a real architecture diagram at static/images/architecture-diagram.png -->
+> _Architecture diagram: to be added._
 
 A client sends events to the collector. The collector validates them against the contract, dedupes and persists them, reduces them into per-session state, and serves a dashboard.
 
-![Pipeline flow](static/images/pipeline-flow.png)
+<!-- TODO: replace with a real dashboard screenshot at static/images/dashboard.png -->
+> _Dashboard screenshot: to be added._
 
 ## The privacy guarantee
 

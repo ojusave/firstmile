@@ -1,0 +1,26 @@
+# Never ship host-built artifacts into the image. node_modules in particular
+# carries native bindings (e.g. better-sqlite3) compiled for the host OS/arch,
+# which breaks inside the Linux runtime. Dependencies are installed in-image.
+node_modules
+**/node_modules
+
+# Build output is regenerated inside the image.
+dist
+**/dist
+
+# Local data, VCS, and tooling noise.
+data
+**/data
+*.db
+*.db-shm
+*.db-wal
+.git
+.gitignore
+.github
+*.log
+npm-debug.log*
+
+# Examples and docs are not needed to run the collector.
+examples
+docs
+static
