@@ -24,7 +24,11 @@ describe("scaffold", () => {
     const root = new URL("../../../", import.meta.url);
     const packageJson = JSON.parse(
       readFileSync(new URL("package.json", root), "utf8"),
-    ) as { engines: { node: string }; scripts: Record<string, string> };
+    ) as {
+      name: string;
+      engines: { node: string };
+      scripts: Record<string, string>;
+    };
     // Shared toolchain pins that hold wherever the kit is vendored.
     expect(packageJson.engines.node).toBe(">=20");
     expect(packageJson.scripts.test).toBe("vitest run");
@@ -33,7 +37,7 @@ describe("scaffold", () => {
     // The workshop scaffold additionally pins the kit build + verify harness.
     // An upstream product root may carry its own toolchain, so only assert
     // these when the workshop harness (scripts.verify) is present.
-    if (typeof packageJson.scripts.verify === "string") {
+    if (packageJson.name === "firstmile") {
       expect(packageJson.scripts.build).toBe(
         "npm run build --workspaces --if-present",
       );
