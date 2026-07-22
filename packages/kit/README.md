@@ -124,7 +124,7 @@ calibrate({
 });
 ```
 
-The host is responsible for starting Hono. `createCalibrate` exposes credentialed ingestion at `/api/events`, the manifest at `/api/manifest`, protected aggregates at `/api/dashboard`, the projector at `/present`, bearer-protected JSONL export at `/export`, and `/healthz`.
+The host is responsible for starting Hono. `createCalibrate` exposes service status at `/`, credentialed ingestion at `/api/events`, the manifest at `/api/manifest`, protected aggregates at `/api/dashboard`, the projector at `/present`, bearer-protected JSONL export at `/export`, and `/healthz`.
 
 ## Standalone sidecar
 

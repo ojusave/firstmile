@@ -247,9 +247,10 @@ describe("createCalibrate", () => {
     ).toEqual([start]);
   });
 
-  it("returns manifest, dashboard, health, and projector routes", async () => {
+  it("returns status, manifest, dashboard, health, and projector routes", async () => {
     const server = createCalibrate({ manifest, adminToken: "secret" });
 
+    const statusResponse = await server.routes.request("/");
     const manifestResponse = await server.routes.request("/api/manifest");
     expect((await server.routes.request("/api/dashboard")).status).toBe(401);
     const dashboardResponse = await server.routes.request("/api/dashboard", {
@@ -258,6 +259,15 @@ describe("createCalibrate", () => {
     const healthResponse = await server.routes.request("/healthz");
     const presentResponse = await server.routes.request("/present");
 
+    expect(await json(statusResponse)).toEqual({
+      ok: true,
+      service: "calibrate-sidecar",
+      endpoints: {
+        health: "./healthz",
+        manifest: "./api/manifest",
+        present: "./present",
+      },
+    });
     expect(await json(manifestResponse)).toEqual(manifest);
     expect(await json(dashboardResponse)).toMatchObject({
       manifestVersion: "v1",
@@ -320,6 +330,7 @@ describe("createCalibrate", () => {
   it("sets no-store on every response", async () => {
     const server = createCalibrate({ manifest, adminToken: "secret" });
     const requests: Array<[string, RequestInit?]> = [
+      ["/"],
       ["/api/manifest"],
       ["/api/dashboard"],
       ["/healthz"],
