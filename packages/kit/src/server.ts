@@ -309,6 +309,15 @@ export function createCalibrate(
     return context.json({ ok: true, accepted, rejected, duplicates, meta: meta() });
   });
 
+  routes.get("/", (context) => context.json({
+    ok: true,
+    service: "calibrate-sidecar",
+    endpoints: {
+      health: "./healthz",
+      manifest: "./api/manifest",
+      present: "./present",
+    },
+  }));
   routes.get("/api/manifest", (context) => context.json(manifest));
   routes.get("/api/dashboard", (context) => {
     if (!secretsMatch(bearerToken(context.req.header("Authorization")), options.dashboardToken)) return context.json({ ok: false, error: "unauthorized" }, 401);

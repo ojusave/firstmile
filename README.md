@@ -149,6 +149,8 @@ The repository includes a [Render Blueprint](./render.yaml) for the standalone s
 
 The Blueprint creates one paid Starter web service, generates the three credentials, requires the manifest and allowed origins, disables previews and automatic deploys, and uses in-memory state by default.
 
+The deployed service root returns a public status document. Dashboard data at `/present` remains protected by `DASHBOARD_TOKEN`.
+
 To preserve events across restarts, uncomment `PERSIST_PATH` and the disk block in `render.yaml`. Render persistent disks require a paid service, can attach to only one service instance, and disable zero-downtime deploys. Review [Render's persistent disk documentation](https://render.com/docs/disks) before enabling this option.
 
 You can also run the built sidecar on any Node.js 20 host:
