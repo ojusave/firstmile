@@ -26,9 +26,34 @@ const presentHtml = readFileSync(
   new URL("../present/index.html", import.meta.url),
   "utf8",
 );
+const dashboardScriptMarker = "/* __CALIBRATE_DASHBOARD_SCRIPT__ */";
+const dashboardTemplate = readFileSync(
+  new URL("../dashboard/index.html", import.meta.url),
+  "utf8",
+);
+const dashboardScript = readFileSync(
+  new URL("../dashboard/dashboard.js", import.meta.url),
+  "utf8",
+);
+if (!dashboardTemplate.includes(dashboardScriptMarker)) {
+  throw new Error("dashboard template is missing its script marker");
+}
+const dashboardHtml = dashboardTemplate.replace(
+  dashboardScriptMarker,
+  dashboardScript,
+);
 
 function presentResponse(): Response {
   return new Response(presentHtml, {
+    headers: {
+      "Cache-Control": "no-store",
+      "Content-Type": "text/html; charset=UTF-8",
+    },
+  });
+}
+
+function dashboardResponse(): Response {
+  return new Response(dashboardHtml, {
     headers: {
       "Cache-Control": "no-store",
       "Content-Type": "text/html; charset=UTF-8",
@@ -313,6 +338,7 @@ export function createCalibrate(
     ok: true,
     service: "calibrate-sidecar",
     endpoints: {
+      dashboard: "./dashboard",
       health: "./healthz",
       manifest: "./api/manifest",
       present: "./present",
@@ -325,6 +351,8 @@ export function createCalibrate(
   });
   routes.get("/present", () => presentResponse());
   routes.get("/present/", () => presentResponse());
+  routes.get("/dashboard", () => dashboardResponse());
+  routes.get("/dashboard/", () => dashboardResponse());
   routes.get("/export", (context) => {
     if (!secretsMatch(bearerToken(context.req.header("Authorization")), options.adminToken)) {
       return context.json({ ok: false, error: "unauthorized" }, 401);

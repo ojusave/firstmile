@@ -75,6 +75,8 @@ try {
   }
   for (const required of [
     "README.md",
+    "dashboard/dashboard.js",
+    "dashboard/index.html",
     "present/index.html",
     "skills/install-calibrate/SKILL.md",
     "skills/install-calibrate/agents/openai.yaml",

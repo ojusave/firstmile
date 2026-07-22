@@ -85,7 +85,7 @@ const fm = calibrate({
 await fm.ready;
 ```
 
-Open the configured routes in your app, then visit `http://localhost:8787/present#token=local-dashboard-only` to inspect the projector. For same-origin applications, you can instead [mount the Hono collector inside your app](./packages/kit/README.md#embedded-hono-collector).
+Open the configured routes in your app, then visit `http://localhost:8787/dashboard#token=local-dashboard-only` for the interactive dashboard. Use `http://localhost:8787/present#token=local-dashboard-only` for the full-screen workshop projector. For same-origin applications, you can instead [mount the Hono collector inside your app](./packages/kit/README.md#embedded-hono-collector).
 
 The package reference covers the [controller API](./packages/kit/README.md#controller-api), [route behavior](./packages/kit/README.md#route-configuration), [manifest rules](./packages/kit/README.md#manifest), and [package exports](./packages/kit/README.md#package-exports).
 
@@ -149,7 +149,7 @@ The repository includes a [Render Blueprint](./render.yaml) for the standalone s
 
 The Blueprint creates one paid Starter web service, generates the three credentials, requires the manifest and allowed origins, disables previews and automatic deploys, and uses in-memory state by default.
 
-The deployed service root returns a public status document. Dashboard data at `/present` remains protected by `DASHBOARD_TOKEN`.
+The deployed service root returns a public status document. The interactive UI at `/dashboard` and projector at `/present` fetch protected aggregates with `DASHBOARD_TOKEN`.
 
 To preserve events across restarts, uncomment `PERSIST_PATH` and the disk block in `render.yaml`. Render persistent disks require a paid service, can attach to only one service instance, and disable zero-downtime deploys. Review [Render's persistent disk documentation](https://render.com/docs/disks) before enabling this option.
 

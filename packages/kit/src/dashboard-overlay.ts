@@ -19,11 +19,11 @@ const disabledOverlay: DashboardOverlayHandle = {
 };
 
 /**
- * Builds the dashboard presentation URL without adding credentials.
+ * Builds the dashboard URL without adding credentials.
  */
 export function dashboardUrl(endpoint: string, token?: string): string {
   const base = endpoint.trim().replace(/\/+$/, "");
-  const path = base === "" ? "/present" : `${base}/present`;
+  const path = base === "" ? "/dashboard" : `${base}/dashboard`;
   return token === undefined ? path : `${path}#token=${encodeURIComponent(token)}`;
 }
 

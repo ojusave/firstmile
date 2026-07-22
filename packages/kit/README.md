@@ -124,7 +124,7 @@ calibrate({
 });
 ```
 
-The host is responsible for starting Hono. `createCalibrate` exposes service status at `/`, credentialed ingestion at `/api/events`, the manifest at `/api/manifest`, protected aggregates at `/api/dashboard`, the projector at `/present`, bearer-protected JSONL export at `/export`, and `/healthz`.
+The host is responsible for starting Hono. `createCalibrate` exposes service status at `/`, credentialed ingestion at `/api/events`, the manifest at `/api/manifest`, protected aggregates at `/api/dashboard`, the interactive UI at `/dashboard`, the projector at `/present`, bearer-protected JSONL export at `/export`, and `/healthz`.
 
 ## Standalone sidecar
 
@@ -182,7 +182,24 @@ Calls before initialization completes are queued and do not throw. Only one high
 
 ## In-app dashboard
 
-The overlay is disabled by default. Set `dashboard.enabled: true` to add a Shadow DOM launcher and an iframe for the collector's `/present` route. `defaultOpen` defaults to `false`.
+The overlay is disabled by default. Set `dashboard.enabled: true` to add a Shadow DOM launcher and an iframe for the collector's `/dashboard` route. `defaultOpen` defaults to `false`.
+
+You can also open the dashboard directly:
+
+```text
+https://collector.example/dashboard#token=YOUR_DASHBOARD_TOKEN
+```
+
+The token is read from the URL fragment, removed from the visible address bar, held in browser memory, and sent only as the bearer credential for `/api/dashboard`. The dashboard shows current retention-window aggregates:
+
+- Started, shipped, overall conversion, active-now count, and median ship time
+- Reach and conversion by manifest group
+- Lifecycle presence totals
+- Step reach, derived drop-off, error events, backtracks, returns, and median time
+- Humanized recent signals without session identifiers
+- Connection, paused, stale, unauthorized, unavailable, and empty states
+
+Drop-off is derived from each step's reach compared with the next step, or shipped sessions for the final step. It is clamped at zero because revisits can make aggregate step counts non-monotonic. Error counts are events, not unique users. This first dashboard does not claim trends, cohorts, or time-series data because the snapshot contract does not provide them.
 
 Dashboard data requires `DASHBOARD_TOKEN`; export requires `ADMIN_TOKEN`; ingestion requires `WRITE_KEY`. The overlay uses the dashboard token in a URL fragment. Treat browser credentials as scoped workshop secrets, restrict CORS, and never place `ADMIN_TOKEN` in browser code.
 
