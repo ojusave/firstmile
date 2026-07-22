@@ -34,10 +34,6 @@ Watch the complete local integration flow, from repository inspection and instal
   ![Play the Calibrate implementation walkthrough](./docs/videos/calibrate-implementation-walkthrough.png)
 ](./docs/videos/calibrate-implementation-walkthrough.mp4)
 
-[Open the walkthrough video directly](./docs/videos/calibrate-implementation-walkthrough.mp4)
-
-The video is a local storyboard render. Replace it with a capture containing the actual terminal, browser, and dashboard session before using it as proof of a live run.
-
 ## What Calibrate records
 
 - Named positions such as `account`, `project`, and `success`
