@@ -263,6 +263,7 @@ describe("createCalibrate", () => {
       ok: true,
       service: "calibrate-sidecar",
       endpoints: {
+        dashboard: "./dashboard",
         health: "./healthz",
         manifest: "./api/manifest",
         present: "./present",
@@ -301,6 +302,23 @@ describe("createCalibrate", () => {
     expect(html).toContain('["id", "count", "errors", "backFrom", "returnsTo", "median"]');
     expect(html).not.toMatch(/<script[^>]+src=|<link[^>]+href=/);
     expect((await server.routes.request("/present/")).status).toBe(200);
+
+    const dashboardUiResponse = await server.routes.request("/dashboard");
+    expect(dashboardUiResponse.status).toBe(200);
+    expect(dashboardUiResponse.headers.get("content-type")).toContain("text/html");
+    expect(dashboardUiResponse.headers.get("cache-control")).toBe("no-store");
+    const dashboardHtml = await dashboardUiResponse.text();
+    expect(dashboardHtml).toContain("Calibrate dashboard");
+    expect(dashboardHtml).toContain("Group funnel");
+    expect(dashboardHtml).toContain('id="dashboard-content" tabindex="-1"');
+    expect(dashboardHtml).toContain("function initializeDashboard()");
+    expect(dashboardHtml).toContain("Dashboard token required");
+    expect(dashboardHtml).toContain("Dashboard token rejected");
+    expect(dashboardHtml).toContain("Showing stale data");
+    expect(dashboardHtml).not.toContain("__CALIBRATE_DASHBOARD_SCRIPT__");
+    expect(dashboardHtml).not.toMatch(/<script[^>]+src=|<link[^>]+href=/);
+    expect(dashboardHtml).not.toContain("dashboard-secret");
+    expect((await server.routes.request("/dashboard/")).status).toBe(200);
   });
 
   it("works when mounted under a Hono prefix", async () => {
@@ -318,6 +336,7 @@ describe("createCalibrate", () => {
       headers: dashboardHeaders,
     });
     const present = await app.request("/__calibrate/present");
+    const dashboardUi = await app.request("/__calibrate/dashboard");
 
     expect(ingest.status).toBe(200);
     expect(await dashboard.json()).toMatchObject({
@@ -325,6 +344,8 @@ describe("createCalibrate", () => {
     });
     expect(present.status).toBe(200);
     expect(await present.text()).toContain("window.location.pathname");
+    expect(dashboardUi.status).toBe(200);
+    expect(await dashboardUi.text()).toContain("dashboardApiPath(window.location.pathname)");
   });
 
   it("sets no-store on every response", async () => {
@@ -335,6 +356,7 @@ describe("createCalibrate", () => {
       ["/api/dashboard"],
       ["/healthz"],
       ["/present"],
+      ["/dashboard"],
       ["/export"],
       ["/missing"],
       [

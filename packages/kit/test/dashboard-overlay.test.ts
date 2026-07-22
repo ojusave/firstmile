@@ -38,10 +38,10 @@ describe("dashboard overlay", () => {
       overlay?.destroy();
     }).not.toThrow();
     expect(document.querySelector("[data-calibrate-dashboard]")).toBeNull();
-    expect(dashboardUrl("")).toBe("/present");
-    expect(dashboardUrl("/__calibrate/")).toBe("/__calibrate/present");
+    expect(dashboardUrl("")).toBe("/dashboard");
+    expect(dashboardUrl("/__calibrate/")).toBe("/__calibrate/dashboard");
     expect(dashboardUrl("https://collector.test/base/")).toBe(
-      "https://collector.test/base/present",
+      "https://collector.test/base/dashboard",
     );
   });
 
@@ -64,7 +64,7 @@ describe("dashboard overlay", () => {
     expect(backdrop?.hidden).toBe(true);
     expect(dialog?.getAttribute("aria-modal")).toBe("true");
     expect(frame?.getAttribute("src")).toBe(
-      "/__calibrate/present#token=dashboard-token",
+      "/__calibrate/dashboard#token=dashboard-token",
     );
     overlay.open();
     expect(backdrop?.hidden).toBe(false);
